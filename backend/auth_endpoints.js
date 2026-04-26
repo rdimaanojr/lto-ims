@@ -1,4 +1,5 @@
 import * as auth from './auth_queries.js';
+import { createSession } from './session.js';
 import { getJsonBody } from './utils.js';
 
 export const postRegister = async (req, res) => {
@@ -49,7 +50,12 @@ export const postLogin = async (req, res) => {
         }
 
         // success
-        res.writeHead(200);
+        const sessionId = createSession(user);
+
+        res.writeHead(200, {
+            'Set-Cookie': `sessionId=${sessionId}; HttpOnly; Path=/`,
+            'Content-Type': 'application/json'
+        });
         res.end(JSON.stringify({ message: "Login successful", role: user.role }));
     } catch (err) {
         console.error("Login error:", err);
