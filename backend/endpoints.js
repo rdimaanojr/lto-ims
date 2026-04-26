@@ -12,7 +12,7 @@ export const testConnection = async (req, res) => {
 };
 
 
-export const getDrivers = async (req, res) => {
+export const getDriversFiltered = async (req, res) => {
     // parse params from the URL
     const url = new URL(req.url, `http://${req.headers.host}`);
     const licenseType = url.searchParams.get('type');
