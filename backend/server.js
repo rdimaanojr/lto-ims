@@ -1,12 +1,15 @@
 import http from 'node:http';
 import db from './db.js';
+import { initializeDatabaseTables } from './init.js';
+
+await initializeDatabaseTables();
 
 const server = http.createServer(async (req, res) => {
     // set CORS headers so the front-end can talk to the server
     res.setHeader('Access-Constrol-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
 
-    // /api/test/ endpoint for testing
+    // /api/test/ endpoint for connection testing
     if (req.url === '/api/test' && req.method === 'GET') {
         try {
             const [rows] = await db.execute('SELECT 1');
