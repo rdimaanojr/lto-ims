@@ -3,6 +3,15 @@ import * as endpoints from './endpoints.js';
 const routes = {
     // format: 'METHOD <route>': endpoint function
     'GET /api/test': endpoints.testConnection,
+
+    // required queries
+    'GET /api/reports/drivers-filtered': endpoints.getDriversFiltered,
+    'GET /api/reports/vehicles-by-license': endpoints.getVehiclesByLicense,
+    'GET /api/reports/expired-vehicles-by-date': endpoints.getExpiredVehiclesAsOfDate,
+    'GET /api/reports/drivers-expired-license': endpoints.getExpiredLicenseDrivers,
+    'GET /api/reports/violations-by-driver-within-date': endpoints.getViolationsByDriverWithinDate,
+    'GET /api/reports/violations-total-by-year': endpoints.getTotalViolationsByYear,
+    'GET /api/reports/vehicles-violations-by-location': endpoints.getVehiclesWithViolationsByLocation,
 };
 
 export const handleRequest = async (req, res) => {
@@ -19,7 +28,7 @@ export const handleRequest = async (req, res) => {
         return;
     }
 
-    const key = `${req.method} ${req.url}`;
+    const key = `${req.method} ${req.url.split('?')[0]}`;
     const handler = routes[key];
 
     if (handler) {
