@@ -30,3 +30,16 @@ export const getJsonBody = (req) => {
         req.on('error', (err) => reject(err));
     });
 }
+
+export const parseCookies = (cookieHeader) => {
+    const list = {};
+    if (!cookieHeader) return list;
+
+    cookieHeader.split(';').forEach(cookie => {
+        const parts = cookie.split('=');
+        if (parts.length === 2) {
+            list[parts[0].trim()] = parts[1].trim();
+        }
+    });
+    return list;
+};
