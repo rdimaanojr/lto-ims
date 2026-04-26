@@ -1,3 +1,4 @@
+import * as authEndpoints from './auth_endpoints.js';
 import * as endpoints from './endpoints.js';
 
 const routes = {
@@ -12,6 +13,9 @@ const routes = {
     'GET /api/reports/violations-by-driver-within-date': endpoints.getViolationsByDriverWithinDate,
     'GET /api/reports/violations-total-by-year': endpoints.getTotalViolationsByYear,
     'GET /api/reports/vehicles-violations-by-location': endpoints.getVehiclesWithViolationsByLocation,
+
+    // auth endpoints
+    'POST /api/auth/register': authEndpoints.postRegister,
 };
 
 export const handleRequest = async (req, res) => {
