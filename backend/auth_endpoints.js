@@ -1,5 +1,6 @@
 import * as auth from './auth_queries.js';
-import { createSession } from './session.js';
+import { createSession, deleteSession } from './session.js';
+import { parseCookies } from './utils.js';
 import { authorize, authorizeAdmin } from './authorization.js';
 import { getJsonBody } from './utils.js';
 
@@ -63,6 +64,21 @@ export const postLogin = async (req, res) => {
         res.writeHead(500);
         res.end(JSON.stringify({ error: "Interval server error" }));
     }
+};
+
+export const postLogout = async (req, res) => {
+    const cookies = parseCookies(req.headers.cooki);
+
+    if (cookies.sessionId) {
+        deleteSession(cookies.sessionId);
+    }
+
+    res.writeHead(200, {
+        'Set-Cookie': 'sessionId=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        'Content-Type': 'application/json'
+    });
+
+    res.end(JSON.stringify({ message: "Logges out succesfully" }))
 };
 
 export const getPendingUsers = async (req, res) => {

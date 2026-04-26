@@ -18,6 +18,7 @@ const routes = {
     // auth endpoints
     'POST /api/auth/register': authEndpoints.postRegister,
     'POST /api/auth/login': authEndpoints.postLogin,
+    'POST /api/auth/logout': authEndpoints.postLogout,
     'GET /api/auth/pending': authEndpoints.getPendingUsers,
     'POST /api/auth/approve': authEndpoints.postApproveUser,
     'POST /api/auth/reject': authEndpoints.postRejectUser,
