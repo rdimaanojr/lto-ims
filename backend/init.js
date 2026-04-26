@@ -120,6 +120,26 @@ const initViolationTable = async () => {
     }
 };
 
+const initAccountTable = async () => {
+    const sql = 
+    `CREATE TABLE IF NOT EXISTS account (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password_hash VARCHAR(128) NOT NULL,
+        salt VARCHAR(64) NOT NULL,
+        role ENUM('admin', 'user') NOT NULL,
+        is_approved BOOLEAN DEFAULT FALSE
+    )`;
+
+    try {
+        const [results] = await db.query(sql);
+        console.log(results.warningStatus === 0 ? "Table `account` created." : "Table `account` already exists.")
+    } catch (err) {
+        console.error("Error initializing `account` table:", err);
+        throw err;
+    }
+}
+
 export const initializeDatabaseTables = async () => {
     try {
         console.log("Initializing database tables.");
@@ -128,6 +148,8 @@ export const initializeDatabaseTables = async () => {
         await initVehicleTable();
         await initRegistrationTable();
         await initViolationTable();
+
+        await initAccountTable();
     } catch (err) {
         console.error("Database initialization falied:", err);
         process.exit(1);
