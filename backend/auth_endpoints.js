@@ -1,5 +1,6 @@
 import * as auth from './auth_queries.js';
 import { createSession } from './session.js';
+import { authorize, authorizeAdmin } from './authorization.js';
 import { getJsonBody } from './utils.js';
 
 export const postRegister = async (req, res) => {
@@ -65,6 +66,12 @@ export const postLogin = async (req, res) => {
 };
 
 export const getPendingUsers = async (req, res) => {
+    const session = authorizeAdmin(req);
+    if (!session) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ error: "Unauthorized: admin access required"}))
+    }
+
     try {
         const users = await auth.getPendingAccounts();
         res.writeHead(200);
@@ -76,6 +83,12 @@ export const getPendingUsers = async (req, res) => {
 };
 
 export const postApproveUser = async (req, res) => {
+    const session = authorizeAdmin(req);
+    if (!session) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ error: "Unauthorized: admin access required"}))
+    }
+
     try {
         const { userID } = await getJsonBody(req);
         await auth.approveAccount(userId);
@@ -88,6 +101,12 @@ export const postApproveUser = async (req, res) => {
 };
 
 export const postRejectUser = async (req, res) => {
+    const session = authorizeAdmin(req);
+    if (!session) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ error: "Unauthorized: admin access required"}))
+    }
+
     try {
         const { userID } = await getJsonBody(req);
         await auth.rejectAccount(userId);

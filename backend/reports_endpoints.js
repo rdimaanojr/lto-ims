@@ -1,6 +1,13 @@
+import { authorize } from './authorization.js';
 import * as reports from './reports_queries.js';
 
 export const getDriversFiltered = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+
     // parse params from the URL
     const url = new URL(req.url, `http://${req.headers.host}`);
     const licenseType = url.searchParams.get('type');
@@ -14,6 +21,12 @@ export const getDriversFiltered = async (req, res) => {
 }
 
 export const getVehiclesByLicense = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+
     const url = new URL(req.url, `http://${req.headers.host}`);
     const licenseNumber = url.searchParams.get('licenseNumber');
 
@@ -22,6 +35,12 @@ export const getVehiclesByLicense = async (req, res) => {
 };
 
 export const getExpiredVehiclesAsOfDate = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+
     const url = new URL(req.url, `http://${req.headers.host}`);
     const date = url.searchParams.get('date');
 
@@ -30,11 +49,23 @@ export const getExpiredVehiclesAsOfDate = async (req, res) => {
 }
 
 export const getExpiredLicenseDrivers = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+
     const drivers = await db.selectDriversWithExpiredOrSuspendedLicense();
     res.end(JSON.stringify(drivers));
 };
 
 export const getViolationsByDriverWithinDate = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+
     const url = new URL(req.url, `http://${req.headers.host}`);
     const licenseNumber = url.searchParams.get('licenseNumber');
     const startDate = url.searchParams.get('startDate');
@@ -45,6 +76,12 @@ export const getViolationsByDriverWithinDate = async (req, res) => {
 }
 
 export const getTotalViolationsByYear = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+
     const url = new URL(req.url, `http://${req.headers.host}`);
     const year = url.searchParams.get('year');
 
@@ -53,6 +90,12 @@ export const getTotalViolationsByYear = async (req, res) => {
 };
 
 export const getVehiclesWithViolationsByLocation = async (req, res) => {
+    const session = authorize(req);
+    if (!session) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: "Unauthorized" }));
+    }
+    
     const url = new URL(req.url, `http://${req.headers.host}`);
     const location = url.searchParams.get('location');
 
