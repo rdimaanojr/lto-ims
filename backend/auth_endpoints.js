@@ -57,3 +57,26 @@ export const postLogin = async (req, res) => {
         res.end(JSON.stringify({ error: "Interval server error" }));
     }
 };
+
+export const getPendingUsers = async (req, res) => {
+    try {
+        const users = await auth.getPendingAccounts();
+        res.writeHead(200);
+        res.end(JSON.stringify(users));
+    } catch (err) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: "Failed to fetch pending users" }));
+    }
+};
+
+export const postApproveUser = async (req, res) => {
+    try {
+        const { userID } = await getJsonBody(req);
+        await auth.approveAccount(userId);
+        res.writeHead(200);
+        res.end(JSON.stringify({ message: "User approved succesfuly" }));
+    } catch (err) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: "Approval failed" }));
+    }
+};

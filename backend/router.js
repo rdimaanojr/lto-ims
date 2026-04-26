@@ -1,4 +1,5 @@
 import * as authEndpoints from './auth_endpoints.js';
+import * as reportsEndpoints from './reports_endpoints.js';
 import * as endpoints from './endpoints.js';
 
 const routes = {
@@ -6,17 +7,19 @@ const routes = {
     'GET /api/test': endpoints.testConnection,
 
     // required queries
-    'GET /api/reports/drivers-filtered': endpoints.getDriversFiltered,
-    'GET /api/reports/vehicles-by-license': endpoints.getVehiclesByLicense,
-    'GET /api/reports/expired-vehicles-by-date': endpoints.getExpiredVehiclesAsOfDate,
-    'GET /api/reports/drivers-expired-license': endpoints.getExpiredLicenseDrivers,
-    'GET /api/reports/violations-by-driver-within-date': endpoints.getViolationsByDriverWithinDate,
-    'GET /api/reports/violations-total-by-year': endpoints.getTotalViolationsByYear,
-    'GET /api/reports/vehicles-violations-by-location': endpoints.getVehiclesWithViolationsByLocation,
+    'GET /api/reports/drivers-filtered': reportsEndpoints.getDriversFiltered,
+    'GET /api/reports/vehicles-by-license': reportsEndpoints.getVehiclesByLicense,
+    'GET /api/reports/expired-vehicles-by-date': reportsEndpoints.getExpiredVehiclesAsOfDate,
+    'GET /api/reports/drivers-expired-license': reportsEndpoints.getExpiredLicenseDrivers,
+    'GET /api/reports/violations-by-driver-within-date': reportsEndpoints.getViolationsByDriverWithinDate,
+    'GET /api/reports/violations-total-by-year': reportsEndpoints.getTotalViolationsByYear,
+    'GET /api/reports/vehicles-violations-by-location': reportsEndpoints.getVehiclesWithViolationsByLocation,
 
     // auth endpoints
     'POST /api/auth/register': authEndpoints.postRegister,
     'POST /api/auth/login': authEndpoints.postLogin,
+    'GET /api/auth/pending': authEndpoints.getPendingUsers,
+    'POST /api/auth/approve': authEndpoints.postApproveUser,
 };
 
 export const handleRequest = async (req, res) => {
