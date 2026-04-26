@@ -9,7 +9,7 @@ const initDriverTable = async () => {
         age INT,
         sex ENUM('M', 'F'),
         address VARCHAR(100),
-        license_type ENUM('student_permit', 'non-professional', 'professional') NOT NULL,
+        license_type ENUM('student', 'non-professional', 'professional') NOT NULL,
         license_status ENUM('valid', 'expired', 'suspended', 'revoked') NOT NULL DEFAULT 'valid',
         issue_date DATE NOT NULL,
         expiry_date DATE NOT NULL
