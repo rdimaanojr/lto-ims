@@ -25,3 +25,35 @@ export const postRegister = async (req, res) => {
         res.end(JSON.stringify({ error: "Server error" }));
     }
 };
+
+export const postLogin = async (req, res) => {
+    try {
+        const { username, password } = await getJsonBody(req);
+        const user = await auth.findUserByUsername(username);
+
+        if (!user) {
+            res.writeHead(401);
+            return res.end(JSON.stringify({ error: "Invalid username or password" }));
+        }
+
+        const loginHash = auth.hashPassword(password, user.salt);
+
+        if (loginHash !== user.password_hash) {
+            res.writeHead(401);
+            return res.end(JSON.stringify({ error: "Invalid username or password" }));
+        }
+
+        if (!user.is_approved) {
+            res.writeHead(403);
+            return res.end(JSON.stringify({ error: "Pending account approval" }));
+        }
+
+        // success
+        res.writeHead(200);
+        res.end(JSON.stringify({ message: "Login successful", role: user.role }));
+    } catch (err) {
+        console.error("Login error:", err);
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: "Interval server error" }));
+    }
+};

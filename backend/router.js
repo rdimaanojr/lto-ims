@@ -16,6 +16,7 @@ const routes = {
 
     // auth endpoints
     'POST /api/auth/register': authEndpoints.postRegister,
+    'POST /api/auth/login': authEndpoints.postLogin,
 };
 
 export const handleRequest = async (req, res) => {

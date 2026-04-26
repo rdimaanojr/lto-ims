@@ -11,7 +11,11 @@ export const hashPassword = (password, salt) => {
 
 // find user by username
 export const findUserByUsername = async (username) => {
-    const [rows] = await db.execute(`SELECT * FROM account WHERE username = ?`, [username]);
+    const sql = `
+        SELECT id, username, password_hash, salt, role, is_approved
+        FROM account WHERE username = ?
+    `;
+    const [rows] = await db.execute(sql, [username]);
     return rows[0];
 }
 
