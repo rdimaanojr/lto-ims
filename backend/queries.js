@@ -8,7 +8,7 @@ export const testDatabaseConnection = async () => {
 // REQUIRED SPECIFICATION QUERIES =================================================================
 
 // 1. View all registered drivers filtered by: License type, License status, Age range, Sex
-export const getFilteredDrivers = async (type, status, sex, minAge, maxAge) => {
+export const selectFilteredDrivers = async (type, status, sex, minAge, maxAge) => {
     const sql = `
         SELECT *
         FROM driver
@@ -26,7 +26,7 @@ export const getFilteredDrivers = async (type, status, sex, minAge, maxAge) => {
 }
 
 // 2. View all vehicles owned by a given driver.
-export const getVehiclesByLicense = async (licenseNumber) => {
+export const selectVehiclesByLicense = async (licenseNumber) => {
     const sql = `
         SELECT
             v.*,
@@ -44,7 +44,7 @@ export const getVehiclesByLicense = async (licenseNumber) => {
 };
 
 // 3. View all vehicles with expired registrations as of a given date.
-export const getExpiredVehiclesAsOfDate = async (givenDate) => {
+export const selectExpiredVehiclesAsOfDate = async (givenDate) => {
     const sql = `
         SELECT
             r.registration_number,
@@ -69,7 +69,7 @@ export const getExpiredVehiclesAsOfDate = async (givenDate) => {
 };
 
 // 4. View all drivers with expired or suspended licenses.
-export const getDriversWithExpiredOrSuspendedLicense = async () => {
+export const selectDriversWithExpiredOrSuspendedLicense = async () => {
     const sql = `
         SELECT *
         FROM driver
@@ -84,7 +84,7 @@ export const getDriversWithExpiredOrSuspendedLicense = async () => {
 };
 
 // 5. View all traffic violations committed by a given driver within a specified date range.
-export const getViolationsByDriverWithinDate = async (licenseNumber, startDate, endDate) => {
+export const selectViolationsByDriverWithinDate = async (licenseNumber, startDate, endDate) => {
     const sql = `
         SELECT *
         FROM violation
@@ -99,7 +99,7 @@ export const getViolationsByDriverWithinDate = async (licenseNumber, startDate, 
 };
 
 // 6. View the total number of violations per violation type for a given year.
-export const getTotalViolationsByYear = async (givenYear) => {
+export const selectTotalViolationsByYear = async (givenYear) => {
     const sql = `
         SELECT
             violation_type,
@@ -116,7 +116,7 @@ export const getTotalViolationsByYear = async (givenYear) => {
 };
 
 // 7. View all vehicles involved in violations within a given city or region. 
-export const getVehiclesWithViolationsByLocation = async (givenLocation) => {
+export const selectVehiclesWithViolationsByLocation = async (givenLocation) => {
     const sql = `
         SELECT
             v.*,
