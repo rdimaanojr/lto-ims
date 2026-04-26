@@ -1,4 +1,5 @@
 import * as db from './queries.js';
+import * as db from './reports_queries.js';
 
 export const testConnection = async (req, res) => {
     try {
