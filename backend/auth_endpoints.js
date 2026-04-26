@@ -80,3 +80,15 @@ export const postApproveUser = async (req, res) => {
         res.end(JSON.stringify({ error: "Approval failed" }));
     }
 };
+
+export const postRejectUser = async (req, res) => {
+    try {
+        const { userID } = await getJsonBody(req);
+        await auth.rejectAccount(userId);
+        res.writeHead(200);
+        res.end(JSON.stringify({ message: "User rejected and account deleted" }));
+    } catch (err) {
+        res.writeHead(500);
+        res.end(JSON.stringify( {error: "Rejection failed" }));
+    }
+}

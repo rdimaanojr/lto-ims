@@ -20,6 +20,7 @@ const routes = {
     'POST /api/auth/login': authEndpoints.postLogin,
     'GET /api/auth/pending': authEndpoints.getPendingUsers,
     'POST /api/auth/approve': authEndpoints.postApproveUser,
+    'POST /api/auth/reject': authEndpoints.postRejectUser,
 };
 
 export const handleRequest = async (req, res) => {

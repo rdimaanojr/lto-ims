@@ -45,3 +45,8 @@ export const approveAccount = async (id) => {
     const sql = `UPDATE accounts SET is_approved = TRUE WHERE id = ?`;
     await db.execute(sql, [id]);
 };
+
+export const rejectAccount = async (id) => {
+    const sql = `DELETE FROM account WHERE id = ?`;
+    await db.execute(sql, [id]);
+}
