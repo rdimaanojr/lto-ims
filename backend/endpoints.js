@@ -60,8 +60,8 @@ export const getTotalViolationsByYear = async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const year = url.searchParams.get('year');
 
-    const count = await db.selectTotalViolationsByYear(year);
-    res.end(JSON.stringify( {year: year, total: count }))
+    const violationTypesCount = await db.selectTotalViolationsPerTypeByYear(year);
+    res.end(JSON.stringify(violationTypesCount));
 };
 
 export const getVehiclesWithViolationsByLocation = async (req, res) => {

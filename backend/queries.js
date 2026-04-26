@@ -99,7 +99,7 @@ export const selectViolationsByDriverWithinDate = async (licenseNumber, startDat
 };
 
 // 6. View the total number of violations per violation type for a given year.
-export const selectTotalViolationsByYear = async (givenYear) => {
+export const selectTotalViolationsPerTypeByYear = async (givenYear) => {
     const sql = `
         SELECT
             violation_type,
