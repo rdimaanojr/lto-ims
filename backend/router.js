@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import { authorize, authorizeAdmin } from './authorization.js';
 import * as authEndpoints from './endpoints/auth_endpoints.js';
@@ -70,7 +71,11 @@ const routes = {
     },
 };
 
-const app_paths = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.join(__dirname, '..');
+
+const APP_PATHS = [
     '/',
     '/dashboard',
     '/admin',
@@ -93,7 +98,8 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3001';
 
 export const handleRequest = async (req, res) => {
     // CORS headers
-    res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL);
+    const origin = req.headers.origin || FRONTEND_URL;
+    res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -130,7 +136,7 @@ export const handleRequest = async (req, res) => {
             try {
                 console.log("Checking Admin Auth for:", url);
                 authorizeAdmin(req);
-                return serveFile(url, req, res, isPublic=false);
+                return serveFile(url, req, res, false);
             } catch (err) {
                 console.log("Admin Auth Failed:", err);
                 res.writeHead(403);
@@ -142,7 +148,7 @@ export const handleRequest = async (req, res) => {
             try {
                 console.log("Checking User Auth for:", url);
                 authorize(req);
-                return serveFile(url, req, res, isPublic=false);
+                return serveFile(url, req, res, false);
             } catch (err) {
                  console.log("Auth Failed:", err);
                 res.writeHead(401);
@@ -154,9 +160,9 @@ export const handleRequest = async (req, res) => {
     }
 
     // fallback. return to index.html on refresh or unkown GET request
-    if (req.method === 'GET' &&  app_paths.includes(url)) {
+    if (req.method === 'GET' &&  (url === '/' || APP_PATHS.includes(url))) {
         res.setHeader('Content-Type', 'text/html');
-        return fs.createReadStream(path.join(process.cwd(), '..', 'frontend', 'public', 'index.html')).pipe(res);
+        return fs.createReadStream(path.join(PROJECT_ROOT, 'frontend', 'public', 'index.html')).pipe(res);
     }
 
     res.writeHead(404);
@@ -182,7 +188,7 @@ const handleError = (err, res) => {
 }
 
 const serveFile = (url, req, res, isPublic = true) => {
-    const filePath = path.join(process.cwd(), '..', 'project127', 'frontend', url);
+    const filePath = path.join(PROJECT_ROOT, 'frontend', url);
     console.log("Looking for file at:", filePath);
     
     if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
