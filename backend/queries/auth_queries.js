@@ -29,13 +29,13 @@ export const insertAccount = async (username, password) => {
 };
 
 export const getPendingAccounts = async () => {
-    const sql = `SELECT id, username, role FROM accounts WHERE is_approved = FALSE`;
+    const sql = `SELECT id, username, role FROM account WHERE is_approved = FALSE`;
     const [rows] = await db.execute(sql);
     return rows;
 }
 
 export const approveAccount = async (id) => {
-    const sql = `UPDATE accounts SET is_approved = TRUE WHERE id = ?`;
+    const sql = `UPDATE account SET is_approved = TRUE WHERE id = ?`;
     await db.execute(sql, [id]);
 };
 
