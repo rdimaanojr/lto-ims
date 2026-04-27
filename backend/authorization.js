@@ -1,5 +1,5 @@
-import { parseCookies } from "./utils";
-import { getSessions } from "./session";
+import { parseCookies } from "./utils.js";
+import { getSessions } from "./session.js";
 
 export const authorize = (req) => {
     const cookies = parseCookies(req.headers.cookie);
