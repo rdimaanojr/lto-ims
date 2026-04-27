@@ -1,4 +1,5 @@
 .env
 /backend/config.js
+/backend/generate_admin.js
 
 /node_modules

@@ -1,8 +1,14 @@
 import * as auth from '../queries/auth_queries.js';
-import { createSession, deleteSession } from '../session.js';
-import { getJsonBody, hashPassword } from '../utils.js';
+import { createSession, getSessions, deleteSession } from '../session.js';
+import { getJsonBody, parseCookies, hashPassword } from '../utils.js';
 
 export const postRegister = async (req, res, session = {}) => {
+    const cookies = parseCookies(req.headers.cookie);
+    if (cookies.sessionId && getSessions(cookies.sessionId)) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ error: "A user is currently logged in" }));
+    }
+
     try {
         const { username, password } = await getJsonBody(req);
 
@@ -28,6 +34,12 @@ export const postRegister = async (req, res, session = {}) => {
 };
 
 export const postLogin = async (req, res, session = {}) => {
+    const cookies = parseCookies(req.headers.cookie);
+    if (cookies.sessionId && getSessions(cookies.sessionId)) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ error: "A user is currently logged in" }));
+    }
+
     try {
         const { username, password } = await getJsonBody(req);
         const user = await auth.findUserByUsername(username);
