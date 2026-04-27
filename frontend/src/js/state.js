@@ -12,7 +12,7 @@ const clearUser = () => {
     localStorage.removeItem('user');
 }
 
-const isLoggedIn = () => !!userState.user;
+const isLoggedIn = () => !!userState.username;
 
 const isAdmin = () => userState.role === 'admin';
 
