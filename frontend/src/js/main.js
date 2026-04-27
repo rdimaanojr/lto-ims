@@ -1,6 +1,7 @@
 import { api } from './api.js';
 import { state } from './state.js';
 
+
 export const initAuthForms = () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
