@@ -17,6 +17,17 @@ export const postRegister = async (req, res, session = {}) => {
             return res.end(JSON.stringify({ error: "Missing fields."}));
         }
 
+        const existingUser = await auth.findUserByUsername(username);
+        if (existingUser) {
+            if (existingUser.is_approved) {
+                res.writeHead(409);
+                return res.end(JSON.stringify( {error: "Username already taken" } ));
+            } else {
+                res.writeHead(400);
+                return res.end(JSON.stringify( {error: "Account already registered and awaiting approval" }));
+            }
+        }
+
         await auth.insertAccount(username, password);
         res.writeHead(201);
         res.end(JSON.stringify({ message: "Account registered. Wait for admin approval."}));
@@ -29,7 +40,7 @@ export const postRegister = async (req, res, session = {}) => {
         }
 
         res.writeHead(500);
-        res.end(JSON.stringify({ error: "Server error" }));
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
     }
 };
 
