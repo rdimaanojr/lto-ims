@@ -1,4 +1,4 @@
-import * as reports from './reports_queries.js';
+import * as reports from '../queries/reports_queries.js';
 
 export const getDriversFiltered = async (req, res, session) => {
     // parse params from the URL

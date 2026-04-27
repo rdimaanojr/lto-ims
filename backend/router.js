@@ -1,7 +1,7 @@
 import { authorize, authorizeAdmin } from './authorization.js';
-import * as authEndpoints from './auth_endpoints.js';
-import * as reportsEndpoints from './reports_endpoints.js';
-import * as endpoints from './endpoints.js';
+import * as authEndpoints from './endpoints/auth_endpoints.js';
+import * as reportsEndpoints from './endpoints/reports_endpoints.js';
+import * as endpoints from './endpoints/endpoints.js';
 
 const routes = {
     // format: 'METHOD <route>': { handler: endpoint function, guard: authorization function }

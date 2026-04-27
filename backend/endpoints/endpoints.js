@@ -1,4 +1,4 @@
-import * as db from './queries.js';
+import * as db from '../queries/queries.js';
 
 export const testConnection = async (req, res, session) => {
     try {

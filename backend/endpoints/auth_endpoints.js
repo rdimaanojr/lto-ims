@@ -1,6 +1,6 @@
-import * as auth from './auth_queries.js';
-import { createSession, deleteSession } from './session.js';
-import { getJsonBody } from './utils.js';
+import * as auth from '../queries/auth_queries.js';
+import { createSession, deleteSession } from '../session.js';
+import { getJsonBody } from '../utils.js';
 
 export const postRegister = async (req, res, session = {}) => {
     try {

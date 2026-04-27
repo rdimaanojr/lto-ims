@@ -1,5 +1,5 @@
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
-import db from './db.js';
+import db from '../db.js';
 
 const ITERATIONS = 100000;
 const KEY_LEN = 64;
