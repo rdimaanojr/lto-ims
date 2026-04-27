@@ -157,7 +157,7 @@ export const postRejectUser = async (req, res, session) => {
 
         if (user.is_approved) {
             res.writeHead(400);
-            return res.end(JSON.stringify({ error: "Cannot delete approved user" }));
+            return res.end(JSON.stringify({ error: "Cannot reject approved user" }));
         }
 
         await auth.rejectAccount(user.id);

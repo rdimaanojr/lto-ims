@@ -86,7 +86,7 @@ export const handleRequest = async (req, res) => {
 
     if (!route) {
         res.writeHead(404);
-        res.end(JSON.stringify({ message: "Route not found" }));
+        return res.end(JSON.stringify({ message: "Route not found" }));
     }
 
     let session = null;
@@ -96,6 +96,11 @@ export const handleRequest = async (req, res) => {
         }
         await route.handler(req, res, session);
     } catch (err) {
+        if (res.headersSent) {
+            console.error("Error occured after headers sent:", err);
+            return;
+        }
+
         if (err.message === "UNAUTHENTICATED") {
             res.writeHead(401);
             res.end(JSON.stringify({ error: "User not logged in" }));
@@ -103,6 +108,7 @@ export const handleRequest = async (req, res) => {
             res.writeHead(403);
             res.end(JSON.stringify({ error: "Unauthorized: Admin access required" }))
         } else {
+            console.error("Unhandled error:", err);
             res.writeHead(500);
             res.end(JSON.stringify({ error: "Internal Server Error" }));
         }
