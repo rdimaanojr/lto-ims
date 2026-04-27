@@ -86,7 +86,7 @@ export const postLogout = async (req, res, session) => {
         'Content-Type': 'application/json'
     });
 
-    res.end(JSON.stringify({ message: "Logges out succesfully" }))
+    res.end(JSON.stringify({ message: "Logged out succesfully" }))
 };
 
 export const getPendingUsers = async (req, res, session) => {
