@@ -5,10 +5,17 @@ import { Login } from '../pages/Login.js';
 const app = document.getElementById('app');
 
 export const navigateTo = async (path) => {
+    if (path === '/' && state.isLoggedIn()) {
+        return navigateTo('/dashboard');
+    }
+
+    if (window.location.pathname !== path) {
+        window.history.pushState({}, "", path);
+    }
+
     if (path === '/admin') {
         if (!state.isAdmin()) {
-            window.location.pathname = '/dashboard';
-            return;
+            return navigateTo('/dashboard');
         }
 
         const { AdminDashboard } = await import('../pages/AdminDashboard.js');
@@ -16,8 +23,11 @@ export const navigateTo = async (path) => {
         return;
     }
     
-    // home page
-    if (path === '/dashboard' && state.isLoggedIn()) {
+    if (path === '/dashboard') {
+        if (!state.isLoggedIn()) {
+            return navigateTo('/');
+        }
+
         const { Dashboard } = await import('../pages/Dashboard.js');
         render.renderPage(Dashboard(), true);
         return;
