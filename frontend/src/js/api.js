@@ -1,20 +1,19 @@
-const login = async (username, password) => {
-    const res = await fetch(`/api/auth/login`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ username, password })
-    });
-    return await res.json();
-};
+const request = async (url, method, body = null) => {
+    const options = {
+        method,
+        headers: { 'Content-Type': 'application/json' }
+    };
+    if (body) options.body = JSON.stringify(body);
 
-const register = async (username, password) => {
-    const res = await fetch(`/api/auth/register`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ username, password })
-    });
-    return await res.json();
-};
+    const res = await fetch(url, options);
+    const data = await res.json();
+
+    return { status: res.status, data };
+}
+
+const login = (username, password) => request('/api/auth/login', 'POST', {username, password});
+
+const register = (username, password) => request('/api/auth/register', 'POST', {username, password}); 
 
 export const api = {
     login,

@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { state } from './state.js';
 
 export const initAuthForms = () => {
     const loginForm = document.getElementById('loginForm');
@@ -10,7 +11,14 @@ export const initAuthForms = () => {
         const password = document.getElementById('loginPassword').value;
         
         const result = await api.login(username, password);
-        console.log("Login response:", result);
+        
+        if (result.status === 200) {
+            state.saveUser(result.data);
+            window.location.href = '/dashboard';
+        } else {
+            alert(result.data.error || "Login failed");
+        }
+
     });
 
     registerForm.addEventListener('submit', async (e) => {

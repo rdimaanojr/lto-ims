@@ -79,7 +79,7 @@ export const postLogin = async (req, res, session = {}) => {
             'Set-Cookie': `sessionId=${sessionId}; HttpOnly; Path=/`,
             'Content-Type': 'application/json'
         });
-        res.end(JSON.stringify({ message: "Login successful", role: user.role }));
+        res.end(JSON.stringify({ message: "Login successful", username: user.username, role: user.role }));
     } catch (err) {
         console.error("Login error:", err);
         res.writeHead(500);
