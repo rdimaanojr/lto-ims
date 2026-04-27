@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:frontend": "serve frontend --single --listen 3001",
+    "start:frontend": "serve frontend/public --single --listen 3001",
     "start:backend": "node --env-file=backend/.env backend/index.js"
   },
   "repository": {
