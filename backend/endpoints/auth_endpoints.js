@@ -17,7 +17,7 @@ export const postRegister = async (req, res, session = {}) => {
             return res.end(JSON.stringify({ error: "Missing fields."}));
         }
 
-        const existingUser = await auth.findUserByUsername(username);
+        const existingUser = await auth.findUserByIdOrUsername({ username: username });
         if (existingUser) {
             if (existingUser.is_approved) {
                 res.writeHead(409);
@@ -53,7 +53,7 @@ export const postLogin = async (req, res, session = {}) => {
 
     try {
         const { username, password } = await getJsonBody(req);
-        const user = await auth.findUserByUsername(username);
+        const user = await auth.findUserByIdOrUsername({ username: username });
 
         if (!user) {
             res.writeHead(401);
@@ -113,8 +113,25 @@ export const getPendingUsers = async (req, res, session) => {
 
 export const postApproveUser = async (req, res, session) => {
     try {
-        const { userID } = await getJsonBody(req);
-        await auth.approveAccount(userId);
+        const { userId, username } = await getJsonBody(req);       
+        if (!userId && !username) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ error: "UserId or username not provided" }))
+        }
+
+        const user = await auth.findUserByIdOrUsername({ userId, username });
+
+        if (!user) {
+            res.writeHead(404);
+            return res.end(stringify({ error: "User not found" }));
+        }
+
+        if (user.is_approved) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ error: "User is already approved" }));
+        }
+
+        await auth.approveAccount(user.id);
         res.writeHead(200);
         res.end(JSON.stringify({ message: "User approved succesfuly" }));
     } catch (err) {
@@ -125,8 +142,25 @@ export const postApproveUser = async (req, res, session) => {
 
 export const postRejectUser = async (req, res, session) => {
     try {
-        const { userID } = await getJsonBody(req);
-        await auth.rejectAccount(userId);
+        const { userId, username } = await getJsonBody(req);
+        if (!userId && !username) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ error: "UserId or username not provided" }))
+        }
+
+        const user = await auth.findUserByIdOrUsername({ userId, username });
+
+        if (!user) {
+            res.writeHead(404);
+            return res.end(stringify({ error: "User not found" }));
+        }
+
+        if (user.is_approved) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ error: "Cannot delete approved user" }));
+        }
+
+        await auth.rejectAccount(user.id);
         res.writeHead(200);
         res.end(JSON.stringify({ message: "User rejected and account deleted" }));
     } catch (err) {

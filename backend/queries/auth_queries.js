@@ -3,12 +3,11 @@ import { randomBytes } from 'node:crypto';
 import { hashPassword } from '../utils.js';
 
 // find user by username
-export const findUserByUsername = async (username) => {
-    const sql = `
-        SELECT id, username, password_hash, salt, role, is_approved
-        FROM account WHERE username = ?
-    `;
-    const [rows] = await db.execute(sql, [username]);
+export const findUserByIdOrUsername = async ({id, username}) => {
+    const sql = id
+        ? `SELECT * FROM account WHERE id = ?`
+        : `SELECT * FROM account WHERE username = ?`;
+    const [rows] = await db.execute(sql, [id || username]);
     return rows[0];
 }
 
