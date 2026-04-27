@@ -15,7 +15,10 @@ const login = (username, password) => request('/api/auth/login', 'POST', {userna
 
 const register = (username, password) => request('/api/auth/register', 'POST', {username, password}); 
 
+const logout = () => request('/api/auth/logout', 'POST');
+
 export const api = {
     login,
     register,
+    logout,
 };

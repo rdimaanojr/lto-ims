@@ -7,16 +7,18 @@
     <div id="app"></div>
 
     <script type="module">
+        import { initEventListeners } from '../src/js/main.js';
         import { navigateTo } from '../src/js/router.js';
 
         document.addEventListener('DOMContentLoaded', () => {
+            initEventListeners();
             navigateTo(window.location.pathname);
         });
 
         window.addEventListener('popstate', () => {
+            initEventListeners();
             navigateTo(window.location.pathname);
         });
     </script>
-
 </body>
 </html>

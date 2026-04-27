@@ -1,39 +1,55 @@
 import { api } from './api.js';
 import { state } from './state.js';
+import { navigateTo } from './router.js';
 
+const handleLogin = async (form) => {
+    const res = await api.login(form.loginUsername.value, form.loginPassword.value);
+    if (res.status === 200) {
+        state.saveUser(res.data);
+        window.history.pushState({}, '', '/dashboard');
+        navigateTo('/dashboard');
+    } else {
+        alert(res.data.error || "Login failed!");
+    }
+};
 
-export const initAuthForms = () => {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
+const handleRegister = async (form) => {
+    const username = form.regUsername.value;
+    const password = form.regPassword.value;
+    const confirm = form.regConfirmPassword.value;
 
-    loginForm.addEventListener('submit', async (e) => {
+    if (password !== confirm) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    const result = await api.register(username, password);
+    alert(result);
+}
+
+const handleLogout = async () => {
+    await api.logout();
+    state.clearUser();
+    window.history.pushState({}, '', '/');
+    navigateTo('/');
+}
+
+export const initEventListeners = () => {
+    const app = document.getElementById('app');
+
+    app.addEventListener('submit', (e) => {
         e.preventDefault();
-        const username = document.getElementById('loginUsername').value;
-        const password = document.getElementById('loginPassword').value;
-        
-        const result = await api.login(username, password);
-        
-        if (result.status === 200) {
-            state.saveUser(result.data);
-            window.location.href = '/dashboard';
-        } else {
-            alert(result.data.error || "Login failed");
+        if (e.target.id === 'loginForm') {
+            handleLogin(e.target);
+        } else if (e.target.id === 'logoutForm') {
+            handleRegister(e.target);
         }
+    })
 
-    });
-
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('regUsername').value;
-        const password = document.getElementById('regPassword').value;
-        const confirm = document.getElementById('regConfirmPassword').value;
-
-        if (password !== confirm) {
-            alert("Passwords do not match!");
-            return;
+    app.addEventListener('click', (e) => {
+        if (e.target.id === 'logout-btn') {
+            handleLogout();
         }
+    })
 
-        const result = await api.register(username, password);
-        console.log("Register response:", result);
-    });
 };
