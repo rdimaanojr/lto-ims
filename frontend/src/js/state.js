@@ -1,4 +1,4 @@
-export let userState = JSON.parse(localStorage.getItem('user')) || null;
+export let userState = JSON.parse(localStorage.getItem('user')) || {};
 
 const getUser = () => userState;
 
@@ -8,11 +8,11 @@ const saveUser = (user) => {
 }
 
 const clearUser = () => {
-    userState = null;
+    userState = {};
     localStorage.removeItem('user');
 }
 
-const isLoggedIn = () => userState !== null;
+const isLoggedIn = () => !!userState.user;
 
 const isAdmin = () => userState.role === 'admin';
 
