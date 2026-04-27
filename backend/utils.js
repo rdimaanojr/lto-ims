@@ -1,3 +1,5 @@
+import { pbkdf2Sync } from 'node:crypto';
+
 const MAX_BODY_SIZE = 1 * 1024 * 1024;
 
 // boilerplate vanilla JSON parser-
@@ -43,3 +45,11 @@ export const parseCookies = (cookieHeader) => {
     });
     return list;
 };
+
+const ITERATIONS = 100000;
+const KEY_LEN = 64;
+const DIGEST = "sha256";
+
+export const hashPassword = (password, salt) => {
+    return pbkdf2Sync(password, salt, ITERATIONS, KEY_LEN, DIGEST).toString('hex');
+}

@@ -1,6 +1,6 @@
 import * as auth from '../queries/auth_queries.js';
 import { createSession, deleteSession } from '../session.js';
-import { getJsonBody } from '../utils.js';
+import { getJsonBody, hashPassword } from '../utils.js';
 
 export const postRegister = async (req, res, session = {}) => {
     try {
@@ -37,7 +37,7 @@ export const postLogin = async (req, res, session = {}) => {
             return res.end(JSON.stringify({ error: "Invalid username or password" }));
         }
 
-        const loginHash = auth.hashPassword(password, user.salt);
+        const loginHash = hashPassword(password, user.salt);
 
         if (loginHash !== user.password_hash) {
             res.writeHead(401);

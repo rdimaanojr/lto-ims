@@ -1,13 +1,6 @@
-import { pbkdf2Sync, randomBytes } from 'node:crypto';
 import db from '../db.js';
-
-const ITERATIONS = 100000;
-const KEY_LEN = 64;
-const DIGEST = "sha256";
-
-export const hashPassword = (password, salt) => {
-    return pbkdf2Sync(password, salt, ITERATIONS, KEY_LEN, DIGEST).toString('hex');
-}
+import { randomBytes } from 'node:crypto';
+import { hashPassword } from '../utils.js';
 
 // find user by username
 export const findUserByUsername = async (username) => {
