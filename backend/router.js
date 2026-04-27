@@ -1,27 +1,70 @@
+import { authorize, authorizeAdmin } from './authorization.js';
 import * as authEndpoints from './auth_endpoints.js';
 import * as reportsEndpoints from './reports_endpoints.js';
 import * as endpoints from './endpoints.js';
 
 const routes = {
-    // format: 'METHOD <route>': endpoint function
-    'GET /api/test': endpoints.testConnection,
+    // format: 'METHOD <route>': { handler: endpoint function, guard: authorization function }
+    'GET /api/test': { 
+        handler: endpoints.testConnection,
+        guard: null
+    },
 
     // required queries
-    'GET /api/reports/drivers-filtered': reportsEndpoints.getDriversFiltered,
-    'GET /api/reports/vehicles-by-license': reportsEndpoints.getVehiclesByLicense,
-    'GET /api/reports/expired-vehicles-by-date': reportsEndpoints.getExpiredVehiclesAsOfDate,
-    'GET /api/reports/drivers-expired-license': reportsEndpoints.getExpiredLicenseDrivers,
-    'GET /api/reports/violations-by-driver-within-date': reportsEndpoints.getViolationsByDriverWithinDate,
-    'GET /api/reports/violations-total-by-year': reportsEndpoints.getTotalViolationsByYear,
-    'GET /api/reports/vehicles-violations-by-location': reportsEndpoints.getVehiclesWithViolationsByLocation,
+    'GET /api/reports/drivers-filtered': {
+        handler: reportsEndpoints.getDriversFiltered,
+        guard: authorize
+    },
+    'GET /api/reports/vehicles-by-license': {
+        handler: reportsEndpoints.getVehiclesByLicense,
+        guard: authorize,
+    },
+    'GET /api/reports/expired-vehicles-by-date': {
+        handler: reportsEndpoints.getExpiredVehiclesAsOfDate,
+        guard: authorize
+    },
+    'GET /api/reports/drivers-expired-license': {
+        handler: reportsEndpoints.getExpiredLicenseDrivers,
+        guard: authorize
+    },
+    'GET /api/reports/violations-by-driver-within-date': {
+        handler: reportsEndpoints.getViolationsByDriverWithinDate,
+        guard: authorize
+    },
+    'GET /api/reports/violations-total-by-year': {
+        handler: reportsEndpoints.getTotalViolationsByYear,
+        guard: authorize
+    },
+    'GET /api/reports/vehicles-violations-by-location': {
+        handler: reportsEndpoints.getVehiclesWithViolationsByLocation,
+        guard: authorize
+    },
 
     // auth endpoints
-    'POST /api/auth/register': authEndpoints.postRegister,
-    'POST /api/auth/login': authEndpoints.postLogin,
-    'POST /api/auth/logout': authEndpoints.postLogout,
-    'GET /api/auth/pending': authEndpoints.getPendingUsers,
-    'POST /api/auth/approve': authEndpoints.postApproveUser,
-    'POST /api/auth/reject': authEndpoints.postRejectUser,
+    'POST /api/auth/register': {
+        handler: authEndpoints.postRegister,
+        guard: null
+    },
+    'POST /api/auth/login': {
+        handler: authEndpoints.postLogin,
+        guard: null
+    },
+    'POST /api/auth/logout': {
+        handler: authEndpoints.postLogout,
+        guard: authorize
+    },
+    'GET /api/auth/pending': {
+        handler: authEndpoints.getPendingUsers,
+        guard: authorizeAdmin
+    },
+    'POST /api/auth/approve': {
+        handler: authEndpoints.postApproveUser,
+        guard: authorizeAdmin
+    },
+    'POST /api/auth/reject': {
+        handler: authEndpoints.postRejectUser,
+        guard: authorizeAdmin
+    },
 };
 
 export const handleRequest = async (req, res) => {
@@ -39,12 +82,29 @@ export const handleRequest = async (req, res) => {
     }
 
     const key = `${req.method} ${req.url.split('?')[0]}`;
-    const handler = routes[key];
+    const route = routes[key];
 
-    if (handler) {
-        await handler(req, res);
-    } else {
+    if (!route) {
         res.writeHead(404);
         res.end(JSON.stringify({ message: "Route not found" }));
+    }
+
+    let session = null;
+    try {
+        if (route.guard) {
+            session = route.guard(req);
+        }
+        await route.handler(req, res, session);
+    } catch (err) {
+        if (err.message === "UNAUTHENTICATED") {
+            res.writeHead(401);
+            res.end(JSON.stringify({ error: "User not logged in" }));
+        } else if (err.message === "UNAUTHORIZED") {
+            res.writeHead(403);
+            res.end(JSON.stringify({ error: "Unauthorized: Admin access required" }))
+        } else {
+            res.writeHead(500);
+            res.end(JSON.stringify({ error: "Internal Server Error" }));
+        }
     }
 }

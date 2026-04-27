@@ -1,6 +1,6 @@
 import * as db from './queries.js';
 
-export const testConnection = async (req, res) => {
+export const testConnection = async (req, res, session) => {
     try {
         await db.testDatabaseConnection();
         res.writeHead(200);

@@ -1,10 +1,8 @@
 import * as auth from './auth_queries.js';
 import { createSession, deleteSession } from './session.js';
-import { parseCookies } from './utils.js';
-import { authorize, authorizeAdmin } from './authorization.js';
 import { getJsonBody } from './utils.js';
 
-export const postRegister = async (req, res) => {
+export const postRegister = async (req, res, session = {}) => {
     try {
         const { username, password } = await getJsonBody(req);
 
@@ -29,7 +27,7 @@ export const postRegister = async (req, res) => {
     }
 };
 
-export const postLogin = async (req, res) => {
+export const postLogin = async (req, res, session = {}) => {
     try {
         const { username, password } = await getJsonBody(req);
         const user = await auth.findUserByUsername(username);
@@ -66,11 +64,9 @@ export const postLogin = async (req, res) => {
     }
 };
 
-export const postLogout = async (req, res) => {
-    const cookies = parseCookies(req.headers.cooki);
-
-    if (cookies.sessionId) {
-        deleteSession(cookies.sessionId);
+export const postLogout = async (req, res, session) => {
+    if (session) {
+        deleteSession(session.id);
     }
 
     res.writeHead(200, {
@@ -81,13 +77,7 @@ export const postLogout = async (req, res) => {
     res.end(JSON.stringify({ message: "Logges out succesfully" }))
 };
 
-export const getPendingUsers = async (req, res) => {
-    const session = authorizeAdmin(req);
-    if (!session) {
-        res.writeHead(403);
-        return res.end(JSON.stringify({ error: "Unauthorized: admin access required"}))
-    }
-
+export const getPendingUsers = async (req, res, session) => {
     try {
         const users = await auth.getPendingAccounts();
         res.writeHead(200);
@@ -98,13 +88,7 @@ export const getPendingUsers = async (req, res) => {
     }
 };
 
-export const postApproveUser = async (req, res) => {
-    const session = authorizeAdmin(req);
-    if (!session) {
-        res.writeHead(403);
-        return res.end(JSON.stringify({ error: "Unauthorized: admin access required"}))
-    }
-
+export const postApproveUser = async (req, res, session) => {
     try {
         const { userID } = await getJsonBody(req);
         await auth.approveAccount(userId);
@@ -116,13 +100,7 @@ export const postApproveUser = async (req, res) => {
     }
 };
 
-export const postRejectUser = async (req, res) => {
-    const session = authorizeAdmin(req);
-    if (!session) {
-        res.writeHead(403);
-        return res.end(JSON.stringify({ error: "Unauthorized: admin access required"}))
-    }
-
+export const postRejectUser = async (req, res, session) => {
     try {
         const { userID } = await getJsonBody(req);
         await auth.rejectAccount(userId);
