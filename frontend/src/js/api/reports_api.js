@@ -1,24 +1,24 @@
-import { request } from "../utils.js";
+import { request, buildQuery } from "../utils.js";
 
 export const reportsApi = {
-    getDriversFiltered: (type, status, sex, minAge, maxAge) => 
-        request(`/api/reports/drivers-filtered?type=${type}&status=${status}&sex=${sex}&minAge=${minAge}&maxAge=${maxAge}`, 'GET'),
+    getDriversFiltered: (params) => 
+        request(`/api/reports/drivers-filtered?${buildQuery(params)}`, 'GET'),
 
-    getVehiclesByLicense: (licenseNumber) => 
-        request(`/api/reports/vehicles-by-license?licenseNumber=${licenseNumber}`, 'GET'),
+    getVehiclesByLicense: (params) => 
+        request(`/api/reports/vehicles-by-license?${buildQuery(params)}`, 'GET'),
 
-    getExpiredVehiclesAsOfDate: (date) => 
-        request(`/api/reports/expired-vehicles-by-date?date=${date}`, 'GET'),
+    getExpiredVehiclesAsOfDate: (params) => 
+        request(`/api/reports/expired-vehicles-by-date?${buildQuery(params)}`, 'GET'),
 
     getExpiredLicenseDrivers: () => 
         request('/api/reports/drivers-expired-license', 'GET'),
 
-    getViolationsByDriverWithinDate: (licenseNumber, startDate, endDate) => 
-        request(`/api/reports/violations-by-driver-within-date?licenseNumber=${licenseNumber}&startDate=${startDate}&endDate=${endDate}`, 'GET'),
+    getViolationsByDriverWithinDate: (params) => 
+        request(`/api/reports/violations-by-driver-within-date?${buildQuery(params)}`, 'GET'),
 
-    getTotalViolationsByYear: (year) => 
-        request(`/api/reports/violations-total-by-year?year=${year}`, 'GET'),
+    getTotalViolationsByYear: (params) => 
+        request(`/api/reports/violations-total-by-year?${buildQuery(params)}`, 'GET'),
 
-    getVehiclesWithViolationsByLocation: (location) => 
-        request(`/api/reports/vehicles-violations-by-location?location=${location}`, 'GET')
+    getVehiclesWithViolationsByLocation: (params) => 
+        request(`/api/reports/vehicles-violations-by-location?${buildQuery(params)}`, 'GET')
 };

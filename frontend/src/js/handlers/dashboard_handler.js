@@ -1,79 +1,56 @@
 import { reportsApi } from "../api/reports_api.js";
 
+const apiMap = {
+    'form-1': reportsApi.getDriversFiltered,
+    'form-2': reportsApi.getVehiclesByLicense,
+    'form-3': reportsApi.getExpiredVehiclesAsOfDate,
+    'form-4': reportsApi.getExpiredLicenseDrivers,
+    'form-5': reportsApi.getViolationsByDriverWithinDate,
+    'form-6': reportsApi.getTotalViolationsByYear,
+    'form-7': reportsApi.getVehiclesWithViolationsByLocation
+};
+
 export const initDashboardHandlers = () => {
-    // Helper to update the DOM
-    const renderTable = (id, data) => {
-        const container = document.getElementById(`table-${id}`);
-        container.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-    };
+    const app = document.getElementById('app');
 
-    // Setup event delegation for all buttons in the dashboard
-    const dashboard = document.querySelector('.dashboard');
-    if (!dashboard) return;
+    // tab logic
+    app.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-link')) {
+            const target = e.target.id.replace('tab', 'content');
 
-    dashboard.addEventListener('click', async (e) => {
-        if (e.target.tagName !== 'BUTTON') return;
-        
-        const btnId = e.target.id;
+            document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
 
-        // #1: Filtered Drivers
-        if (btnId === 'btn-1') {
-            const data = await reportsApi.getDriversFiltered(
-                document.getElementById('r1-type').value,
-                document.getElementById('r1-status').value,
-                document.getElementById('r1-sex').value,
-                document.getElementById('r1-minAge').value,
-                document.getElementById('r1-maxAge').value
-            );
-            renderTable(1, data.data);
-        }
-
-        // #2: Vehicles By License
-        if (btnId === 'btn-2') {
-            const data = await reportsApi.getVehiclesByLicense(
-                document.getElementById('r2-license').value
-            );
-            renderTable(2, data.data);
-        }
-
-        // #3: Expired Vehicles
-        if (btnId === 'btn-3') {
-            const data = await reportsApi.getExpiredVehiclesAsOfDate(
-                document.getElementById('r3-date').value
-            );
-            renderTable(3, data.data);
-        }
-
-        // #4: Expired License Drivers
-        if (btnId === 'btn-4') {
-            const data = await reportsApi.getExpiredLicenseDrivers();
-            renderTable(4, data.data);
-        }
-
-        // #5: Violations By Driver
-        if (btnId === 'btn-5') {
-            const data = await reportsApi.getViolationsByDriverWithinDate(
-                document.getElementById('r5-license').value,
-                document.getElementById('r5-start').value,
-                document.getElementById('r5-end').value
-            );
-            renderTable(5, data.data);
-        }
-
-        // #6: Violations By Year
-        if (btnId === 'btn-6') {
-            const data = await reportsApi.getTotalViolationsByYear(
-                document.getElementById('r6-year').value
-            );
-            renderTable(6, data.data);
-        }
-
-        // #7: Vehicles By Location
-        if (btnId === 'btn-7') {
-            const data = await reportsApi.getVehiclesWithViolationsByLocation(
-                document.getElementById('r7-location').value
-            );
-            renderTable(7, data.data);
+            e.target.classList.add('active');
+            document.getElementById(target).classList.add('active');
         }
     });
+
+    // form submit logic
+    app.addEventListener('submit', async (e) => {
+        const form = e.target.closest('form');
+        if (!form || !apiMap[form.id]) return;
+        
+        const formData = Object.fromEntries(new FormData(form));
+        const apiFunction = apiMap[form.id];
+        const res = await apiFunction(formData);       
+        renderReportTable(form.id.replace('form-', ''), res.data || []);
+    });
+};
+
+const renderReportTable = (id, data) => {
+    const container = document.getElementById(`table-${id}`);
+    if (!container) return;
+
+    if (data.length === 0) {
+        container.innerHTML = '<p>No records found.</p>';
+        return;
+    }
+
+    const columns = Object.keys(data[0]);
+    let html = `<table><thead><tr>${columns.map(c => `<th>${c.toUpperCase().replace('_', ' ')}</th>`).join('')}</tr></thead><tbody>`;
+    html += data.map(row => `<tr>${columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}</tr>`).join('');
+    html += `</tbody></table>`;
+    
+    container.innerHTML = html;
 };
