@@ -3,7 +3,7 @@ import * as reports from '../queries/reports_queries.js';
 export const getDriversFiltered = async (req, res, session) => {
     // parse params from the URL
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const licenseType = url.searchParams.get('type');
+    const licenseType = url.searchParams.get('license_type');
     const status = url.searchParams.get('status');
     const sex = url.searchParams.get('sex');
     const minAge = url.searchParams.get('minAge');
@@ -15,7 +15,7 @@ export const getDriversFiltered = async (req, res, session) => {
 
 export const getVehiclesByLicense = async (req, res, session) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const licenseNumber = url.searchParams.get('licenseNumber');
+    const licenseNumber = url.searchParams.get('license_number');
 
     const vehicles = await reports.selectVehiclesByLicense(licenseNumber);
     res.end(JSON.stringify(vehicles));
@@ -36,7 +36,7 @@ export const getExpiredLicenseDrivers = async (req, res, session) => {
 
 export const getViolationsByDriverWithinDate = async (req, res, session) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
-    const licenseNumber = url.searchParams.get('licenseNumber');
+    const licenseNumber = url.searchParams.get('license_number');
     const startDate = url.searchParams.get('startDate');
     const endDate = url.searchParams.get('endDate');
 
