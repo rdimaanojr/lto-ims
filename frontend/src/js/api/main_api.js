@@ -1,4 +1,4 @@
-import { request } from "../utils.js";
+import { request } from "../utils/utils.js";
 
 export const mainApi = {
     login:  (username, password) => 
