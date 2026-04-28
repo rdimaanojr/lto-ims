@@ -2,6 +2,20 @@ import { mainApi } from './api/main_api.js';
 import { state } from './state.js';
 import { navigateTo } from './router.js';
 
+window.toggleAuth = () => {
+    const loginView = document.getElementById('view-login');
+    const regView = document.getElementById('view-register');
+    
+    // Toggle displays
+    if (loginView.style.display === 'none') {
+        loginView.style.display = 'block';
+        regView.style.display = 'none';
+    } else {
+        loginView.style.display = 'none';
+        regView.style.display = 'block';
+    }
+};
+
 const handleLogin = async (form) => {
     const res = await mainApi.login(form.loginUsername.value, form.loginPassword.value);
     if (res.status === 200) {
