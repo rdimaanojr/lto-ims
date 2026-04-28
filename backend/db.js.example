@@ -1,20 +1,13 @@
 import mysql from 'mysql2';
-import fs from 'node:fs';
-import path from 'node:path';
 
 // connection pool
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     waitForConnections: true,
-    connectionLimit: 20,
-    ssl: {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync(path.join(process.cwd(), 'global-bundle.pem')),
-    }
+    connectionLimit: 20
 });
 
 export default pool.promise();
