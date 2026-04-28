@@ -9,7 +9,7 @@ const handleAdminPost = async (req, res, queryFn) => {
         res.end(JSON.stringify({ message: "Entry added successfully" }));
     } catch (err) {
         console.error(err);
-        res.writeHead(400); // Usually constraint violations
+        res.writeHead(400);
         res.end(JSON.stringify({ error: "Failed to add entry: check constraints" }));
     }
 };

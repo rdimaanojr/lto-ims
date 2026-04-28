@@ -151,11 +151,9 @@ export const handleRequest = async (req, res) => {
     if (url.startsWith('/src/')) {
         if (ADMIN_SRC_FILES.includes(url)) {
             try {
-                console.log("Checking Admin Auth for:", url);
                 authorizeAdmin(req);
                 return serveFile(url, req, res, false);
             } catch (err) {
-                console.log("Admin Auth Failed:", err);
                 res.writeHead(403);
                 return res.end(JSON.stringify({ message: "Admin access required" }));
             }
@@ -163,11 +161,9 @@ export const handleRequest = async (req, res) => {
 
         if (USER_SRC_FILES.includes(url)) {
             try {
-                console.log("Checking User Auth for:", url);
                 authorize(req);
                 return serveFile(url, req, res, false);
             } catch (err) {
-                 console.log("Auth Failed:", err);
                 res.writeHead(401);
                 return res.end(JSON.stringify({ message: "Login required" }));
             }
@@ -206,7 +202,6 @@ const handleError = (err, res) => {
 
 const serveFile = (url, req, res, isPublic = true) => {
     const filePath = path.join(PROJECT_ROOT, 'frontend', url);
-    console.log("Looking for file at:", filePath);
     
     if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
         const fileStat = fs.statSync(filePath);
