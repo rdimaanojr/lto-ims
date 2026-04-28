@@ -10,7 +10,7 @@ import * as adminEndpoints from './endpoints/admin_endpoints.js';
 
 const routes = {
     // format: 'METHOD <route>': { handler: endpoint function, guard: authorization function }
-    'GET /api/test': { 
+    'GET /api/test': {
         handler: endpoints.testConnection,
         guard: null
     },
@@ -74,7 +74,7 @@ const routes = {
         handler: authEndpoints.postRejectUser,
         guard: authorizeAdmin
     },
-    
+
     // admin endpoints  
     'POST /api/admin/add-driver': { handler: adminEndpoints.postAddDriver, guard: authorizeAdmin },
     'POST /api/admin/add-model': { handler: adminEndpoints.postAddModel, guard: authorizeAdmin },
@@ -86,6 +86,12 @@ const routes = {
     'GET /api/admin/vehicles': { handler: adminEndpoints.getVehicles, guard: authorizeAdmin },
     'GET /api/admin/registrations': { handler: adminEndpoints.getRegistrations, guard: authorizeAdmin },
     'GET /api/admin/violations': { handler: adminEndpoints.getViolations, guard: authorizeAdmin },
+    'GET /api/admin/accounts': { handler: adminEndpoints.getAccounts, guard: authorizeAdmin },
+    'GET /api/admin/current-accounts': { handler: adminEndpoints.getCurrent, guard: authorizeAdmin },
+    'GET /api/admin/pending-accounts': { handler: adminEndpoints.getPending, guard: authorizeAdmin },
+    'POST /api/admin/approve-account': { handler: adminEndpoints.postApproveAccount, guard: authorizeAdmin },
+    'POST /api/admin/reject-account': { handler: adminEndpoints.postRejectAccount, guard: authorizeAdmin },
+    'DELETE /api/admin/delete-account': { handler: adminEndpoints.postDeleteAccount, guard: authorizeAdmin },
 };
 
 const __filename = fileURLToPath(import.meta.url);
@@ -127,12 +133,12 @@ export const handleRequest = async (req, res) => {
         res.end();
         return;
     }
-    
+
     // api routing
     const url = req.url.split('?')[0];
     const key = `${req.method} ${url}`;
     const route = routes[key];
-    
+
     if (route) {
         res.setHeader('Content-Type', 'application/json');
         let session = null;
@@ -173,7 +179,7 @@ export const handleRequest = async (req, res) => {
     }
 
     // fallback. return to index.html on refresh or unkown GET request
-    if (req.method === 'GET' &&  (url === '/' || APP_PATHS.includes(url))) {
+    if (req.method === 'GET' && (url === '/' || APP_PATHS.includes(url))) {
         res.setHeader('Content-Type', 'text/html');
         return fs.createReadStream(path.join(PROJECT_ROOT, 'frontend', 'public', 'index.html')).pipe(res);
     }
@@ -202,7 +208,7 @@ const handleError = (err, res) => {
 
 const serveFile = (url, req, res, isPublic = true) => {
     const filePath = path.join(PROJECT_ROOT, 'frontend', url);
-    
+
     if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
         const fileStat = fs.statSync(filePath);
         const fileContent = fs.readFileSync(filePath);
@@ -224,10 +230,10 @@ const serveFile = (url, req, res, isPublic = true) => {
         const ext = path.extname(filePath);
         const mimeTypes = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript' };
         res.setHeader('Content-Type', mimeTypes[ext] || 'text/plain');
-        
+
         return res.end(fileContent);
     }
-    
+
     res.writeHead(404);
     res.end(JSON.stringify({ message: "File not found" }));
 }

@@ -3,7 +3,7 @@ export const Dashboard = () => {
         <style>
             .dashboard { padding: 20px; font-family: sans-serif; }
             .tabs { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-            .tab-link { margin-right: 20px; cursor: pointer; font-weight: bold; color: #555; }
+            .tab-link { margin-right: 20px; cursor: pointer; font-weight: bold; color: #555; white-space:nowrap;}
             .tab-link:hover { color: #000; }
             .tab-link.active { color: #000; text-decoration: underline; }
             

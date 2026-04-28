@@ -60,3 +60,30 @@ export const getAllViolations = async () => {
     const [rows] = await db.execute("SELECT * FROM violation");
     return rows;
 };
+
+export const getAllAccounts = async () => {
+    const [rows] = await db.execute("SELECT id, username, role FROM account");
+    return rows;
+};
+
+export const getCurrentAccounts = async () => {
+    const [rows] = await db.execute("SELECT id, username, role FROM account WHERE is_approved = TRUE");
+    return rows;
+};
+
+export const getPendingAccounts = async () => {
+    const [rows] = await db.execute("SELECT id, username, role FROM account WHERE is_approved = FALSE");
+    return rows;
+};
+
+export const approveAccount = (id) => {
+    return db.execute("UPDATE account SET is_approved = TRUE WHERE id = ?", [id]);
+};
+
+export const rejectAccount = (id) => {
+    return db.execute("DELETE FROM account WHERE id = ?", [id]);
+};
+
+export const deleteAccount = (id) => {
+    return db.execute("DELETE FROM account WHERE id = ?", [id]);
+};

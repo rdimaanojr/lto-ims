@@ -3,7 +3,7 @@ export const AdminDashboard = () => {
         <style>
             .admin-dashboard { padding: 20px; font-family: sans-serif; }
             .tabs { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-            .tab-link { margin-right: 20px; cursor: pointer; font-weight: bold; color: #555; }
+            .tab-link { margin-right: 20px; cursor: pointer; font-weight: bold; color: #555; white-space: nowrap; }
             .tab-link:hover { color: #000; }
             .tab-link.active { color: #000; text-decoration: underline; }
             
@@ -24,6 +24,16 @@ export const AdminDashboard = () => {
                 padding: 20px 0;
             }
 
+            .accounts-container { 
+                display: flex; 
+                flex-wrap: wrap; 
+                gap: 20px; 
+            }
+            .accounts-section { 
+                flex: 1 1 45%;
+                min-width: 300px;
+            }
+
         </style>
         
         <div class="admin-dashboard">
@@ -31,7 +41,8 @@ export const AdminDashboard = () => {
             
             <div class="tabs">
                 <span id="tab-add" class="tab-link active">Add Records</span>
-                <span id="tab-view" class="tab-link">View Database</span>
+                <span id="tab-records" class="tab-link">View Database</span>
+                <span id="tab-accounts" class="tab-link">Manage Accounts</span>
             </div>
 
             <div id="view-add" class="tab-content active">
@@ -100,6 +111,19 @@ export const AdminDashboard = () => {
                 <div class="section-block"><h3>Registrations</h3><div id="table-registrations"></div></div><hr>
                 <div class="section-block"><h3>Violations</h3><div id="table-violations"></div></div>
             </div>
+
+            <div id="view-accounts" class="tab-content">
+            <div class="accounts-container">
+                <div class="accounts-section">
+                    <h3>All Accounts</h3>
+                    <div id="table-accounts-all"></div>
+                </div>
+                <div class="accounts-section">
+                    <h3>Pending Approvals</h3>
+                    <div id="table-accounts-pending"></div>
+                </div>
+            </div>
+        </div>
         </div>
     `;
 };

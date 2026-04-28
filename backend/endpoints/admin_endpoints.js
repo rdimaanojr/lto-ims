@@ -44,3 +44,41 @@ export const getViolations = async (req, res) => {
     const data = await admin.getAllViolations();
     res.end(JSON.stringify(data));
 };
+
+const getId = (req) => {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    return url.searchParams.get('id');
+};
+
+export const getAccounts = async (req, res) => {
+    const data = await admin.getAllAccounts();
+    res.end(JSON.stringify({ data }));
+};
+
+export const getCurrent = async (req, res) => {
+    const data = await admin.getCurrentAccounts();
+    res.end(JSON.stringify({ data }));
+};
+
+export const getPending = async (req, res) => {
+    const data = await admin.getPendingAccounts();
+    res.end(JSON.stringify({ data }));
+};
+
+export const postApproveAccount = async (req, res) => {
+    const id = getId(req);
+    await admin.approveAccount(id);
+    res.end(JSON.stringify({ status: 200, message: "Approved" }));
+};
+
+export const postRejectAccount = async (req, res) => {
+    const id = getId(req);
+    await admin.rejectAccount(id);
+    res.end(JSON.stringify({ status: 200, message: "Rejected" }));
+};
+
+export const postDeleteAccount = async (req, res) => {
+    const id = getId(req);
+    await admin.deleteAccount(id);
+    res.end(JSON.stringify({ status: 200, message: "Deleted" }));
+};
