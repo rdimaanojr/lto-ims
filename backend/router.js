@@ -3,9 +3,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import { authorize, authorizeAdmin } from './authorization.js';
+import * as endpoints from './endpoints/endpoints.js';
 import * as authEndpoints from './endpoints/auth_endpoints.js';
 import * as reportsEndpoints from './endpoints/reports_endpoints.js';
-import * as endpoints from './endpoints/endpoints.js';
+import * as adminEndpoints from './endpoints/admin_endpoints.js';
 
 const routes = {
     // format: 'METHOD <route>': { handler: endpoint function, guard: authorization function }
@@ -73,6 +74,18 @@ const routes = {
         handler: authEndpoints.postRejectUser,
         guard: authorizeAdmin
     },
+    
+    // admin endpoints  
+    'POST /api/admin/add-driver': { handler: adminEndpoints.postAddDriver, guard: authorizeAdmin },
+    'POST /api/admin/add-model': { handler: adminEndpoints.postAddModel, guard: authorizeAdmin },
+    'POST /api/admin/add-vehicle': { handler: adminEndpoints.postAddVehicle, guard: authorizeAdmin },
+    'POST /api/admin/add-registration': { handler: adminEndpoints.postAddRegistration, guard: authorizeAdmin },
+    'POST /api/admin/add-violation': { handler: adminEndpoints.postAddViolation, guard: authorizeAdmin },
+    'GET /api/admin/drivers': { handler: adminEndpoints.getDrivers, guard: authorizeAdmin },
+    'GET /api/admin/models': { handler: adminEndpoints.getModels, guard: authorizeAdmin },
+    'GET /api/admin/vehicles': { handler: adminEndpoints.getVehicles, guard: authorizeAdmin },
+    'GET /api/admin/registrations': { handler: adminEndpoints.getRegistrations, guard: authorizeAdmin },
+    'GET /api/admin/violations': { handler: adminEndpoints.getViolations, guard: authorizeAdmin },
 };
 
 const __filename = fileURLToPath(import.meta.url);

@@ -29,7 +29,9 @@ export const navigateTo = async (path) => {
 
     if (targetPath === '/admin') {
         const { AdminDashboard } = await import('../pages/AdminDashboard.js');
+        const { initAdminHandlers } = await import('./handlers/admin_handler.js'); 
         render.renderPage(AdminDashboard(), true);
+        initAdminHandlers();
         return;
     }
 
