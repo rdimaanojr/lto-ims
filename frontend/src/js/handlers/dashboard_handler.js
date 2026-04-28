@@ -48,7 +48,7 @@ const renderReportTable = (id, data) => {
     }
 
     const columns = Object.keys(data[0]);
-    let html = `<table><thead><tr>${columns.map(c => `<th>${c.toUpperCase().replace('_', ' ')}</th>`).join('')}</tr></thead><tbody>`;
+    let html = `<table><thead><tr>${columns.map(c => `<th>${c.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}</th>`).join('')}</tr></thead><tbody>`;
     html += data.map(row => `<tr>${columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}</tr>`).join('');
     html += `</tbody></table>`;
     

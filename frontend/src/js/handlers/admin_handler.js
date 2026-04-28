@@ -64,7 +64,7 @@ export const renderDataTables = async () => {
         }
 
         const columns = Object.keys(data[0]);
-        let content = `<table><thead><tr>${columns.map(c => `<th>${c.toUpperCase().replace('_', ' ')}</th>`).join('')}</tr></thead><tbody>`;
+        let content = `<table><thead><tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
         content += data.map(row => `<tr>${columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}</tr>`).join('');
         content += `</tbody></table>`;
         container.innerHTML = content;

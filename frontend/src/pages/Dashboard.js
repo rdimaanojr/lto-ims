@@ -14,9 +14,16 @@ export const Dashboard = () => {
             .form-group label { display: inline-block; width: 150px; font-weight: bold; }
             .form-group input, .form-group select { width: 200px; }
             
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #f4f4f4; }
+            
+            [id^="table-"] {
+                overflow-y: auto;
+                margin-top: 10px;
+                padding: 20px 0;
+            }
+
         </style>
 
         <div class="dashboard">
