@@ -45,6 +45,10 @@ const routes = {
     },
 
     // auth endpoints
+    'GET /api/auth/me': {
+        handler: authEndpoints.getAuthStatus,
+        guard: authorize
+    },
     'POST /api/auth/register': {
         handler: authEndpoints.postRegister,
         guard: null
@@ -86,7 +90,7 @@ const USER_SRC_FILES = [
     '/src/pages/Dashboard.js',
 
     //components
-    '/src/components/Navbar.js'
+    // '/src/components/Navbar.js'
 ];
 
 const ADMIN_SRC_FILES = [
@@ -204,9 +208,9 @@ const serveFile = (url, req, res, isPublic = true) => {
         res.setHeader('ETag', etag);
 
         if (isPublic) {
-            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+            res.setHeader('Cache-Control', 'public, no-cache');
         } else {
-            res.setHeader('Cache-Control', 'private, max-age=86400, must-revalidate');
+            res.setHeader('Cache-Control', 'private, no-cache');
         }
 
         const ext = path.extname(filePath);

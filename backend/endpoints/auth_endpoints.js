@@ -2,6 +2,15 @@ import * as auth from '../queries/auth_queries.js';
 import { createSession, getSessions, deleteSession } from '../session.js';
 import { getJsonBody, parseCookies, hashPassword } from '../utils.js';
 
+export const getAuthStatus = async (req, res, session) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+        isLoggedIn: Boolean(session),
+        username: session?.username || null,
+        role: session?.role || null
+    }));
+};
+
 export const postRegister = async (req, res, session = {}) => {
     const cookies = parseCookies(req.headers.cookie);
     if (cookies.sessionId && getSessions(cookies.sessionId)) {
@@ -14,23 +23,23 @@ export const postRegister = async (req, res, session = {}) => {
 
         if (!username || !password) {
             res.writeHead(400);
-            return res.end(JSON.stringify({ error: "Missing fields."}));
+            return res.end(JSON.stringify({ error: "Missing fields." }));
         }
 
         const existingUser = await auth.findUserByIdOrUsername({ username: username });
         if (existingUser) {
             if (existingUser.is_approved) {
                 res.writeHead(409);
-                return res.end(JSON.stringify( {error: "Username already taken" } ));
+                return res.end(JSON.stringify({ error: "Username already taken" }));
             } else {
                 res.writeHead(400);
-                return res.end(JSON.stringify( {error: "Account already registered and awaiting approval" }));
+                return res.end(JSON.stringify({ error: "Account already registered and awaiting approval" }));
             }
         }
 
         await auth.insertAccount(username, password);
         res.writeHead(201);
-        res.end(JSON.stringify({ message: "Account registered. Wait for admin approval."}));
+        res.end(JSON.stringify({ message: "Account registered. Wait for admin approval." }));
     } catch (err) {
         console.error("Registration error:", err);
 
@@ -113,7 +122,7 @@ export const getPendingUsers = async (req, res, session) => {
 
 export const postApproveUser = async (req, res, session) => {
     try {
-        const { userId, username } = await getJsonBody(req);       
+        const { userId, username } = await getJsonBody(req);
         if (!userId && !username) {
             res.writeHead(400);
             return res.end(JSON.stringify({ error: "UserId or username not provided" }))
@@ -165,6 +174,6 @@ export const postRejectUser = async (req, res, session) => {
         res.end(JSON.stringify({ message: "User rejected and account deleted" }));
     } catch (err) {
         res.writeHead(500);
-        res.end(JSON.stringify( {error: "Rejection failed" }));
+        res.end(JSON.stringify({ error: "Rejection failed" }));
     }
 }

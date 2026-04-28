@@ -27,7 +27,7 @@ export const selectVehiclesByLicense = async (licenseNumber) => {
             v.*,
             m.make,
             m.vehicle_type
-        FROM vehicle v4. View all drivers with expired or suspended licenses.
+        FROM vehicle v
         JOIN vehicle_model m ON v.model = m.model
         WHERE
             v.license_number = ?
@@ -45,17 +45,17 @@ export const selectExpiredVehiclesAsOfDate = async (givenDate) => {
             r.registration_number,
             r.plate_number,
             v.model,
-            v.vehicle_type,
+            m.vehicle_type,
             v.color,
             r.registration_date,
             r.expiration_date,
-            r.registration_status,
+            r.registration_status
         FROM registration r
         JOIN vehicle v ON r.plate_number = v.plate_number
         JOIN vehicle_model m ON v.model = m.model
         WHERE
             r.expiration_date < ?
-            OR r.registration_status = \`expired\`
+            OR r.registration_status = 'expired'
         ORDER BY
             r.expiration_date ASC;
     `;
@@ -69,7 +69,7 @@ export const selectDriversWithExpiredOrSuspendedLicense = async () => {
         SELECT *
         FROM driver
         WHERE
-            licease_status IN ('expired', 'suspended', 'revoked')
+            license_status IN ('expired', 'suspended', 'revoked')
             OR expiry_date < CURDATE() -- catch unupdated status
         ORDER BY
             expiry_date ASC;
@@ -117,7 +117,7 @@ export const selectVehiclesWithViolationsByLocation = async (givenLocation) => {
             v.*,
             m.make,
             m.vehicle_type,
-            vio.violation_type
+            vio.violation_type,
             vio.location,
             vio.date
         FROM vehicle v

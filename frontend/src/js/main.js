@@ -1,9 +1,9 @@
-import { api } from './api.js';
+import { mainApi } from './api/main_api.js';
 import { state } from './state.js';
 import { navigateTo } from './router.js';
 
 const handleLogin = async (form) => {
-    const res = await api.login(form.loginUsername.value, form.loginPassword.value);
+    const res = await mainApi.login(form.loginUsername.value, form.loginPassword.value);
     if (res.status === 200) {
         state.saveUser(res.data);
         window.history.pushState({}, '', '/dashboard');
@@ -23,12 +23,17 @@ const handleRegister = async (form) => {
         return;
     }
 
-    const result = await api.register(username, password);
-    alert(result);
+    const res = await mainApi.register(username, password);
+
+    if (res.status === 201) {
+        alert(res.data.message);
+    } else {
+        alert(res.data.error || "Register failed!");
+    }
 }
 
 const handleLogout = async () => {
-    await api.logout();
+    await mainApi.logout();
     state.clearUser();
     window.history.pushState({}, '', '/');
     navigateTo('/');
@@ -41,7 +46,7 @@ export const initEventListeners = () => {
         e.preventDefault();
         if (e.target.id === 'loginForm') {
             handleLogin(e.target);
-        } else if (e.target.id === 'logoutForm') {
+        } else if (e.target.id === 'registerForm') {
             handleRegister(e.target);
         }
     })

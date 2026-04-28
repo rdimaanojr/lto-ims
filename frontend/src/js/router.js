@@ -5,33 +5,41 @@ import { Login } from '../pages/Login.js';
 const app = document.getElementById('app');
 
 export const navigateTo = async (path) => {
-    if (path === '/' && state.isLoggedIn()) {
-        return navigateTo('/dashboard');
+    const isLoggedIn = await state.verifySession();
+    const isAdmin = state.isAdmin();
+
+    let targetPath = path;
+    if (path === '/' && isLoggedIn) {
+        targetPath = '/dashboard';
     }
 
-    if (window.location.pathname !== path) {
-        window.history.pushState({}, "", path);
-    }
-
-    if (path === '/admin') {
-        if (!state.isAdmin()) {
-            return navigateTo('/dashboard');
+    if (targetPath === '/admin') {
+        if (!isLoggedIn || !isAdmin) {
+            targetPath = '/dashboard';
         }
+    }
 
+    if (targetPath === '/dashboard' && !isLoggedIn) {
+        targetPath = '/';
+    }
+
+    if (window.location.pathname !== targetPath) {
+        window.history.pushState({}, "", targetPath);
+    }
+
+    if (targetPath === '/admin') {
         const { AdminDashboard } = await import('../pages/AdminDashboard.js');
         render.renderPage(AdminDashboard(), true);
         return;
     }
-    
-    if (path === '/dashboard') {
-        if (!state.isLoggedIn()) {
-            return navigateTo('/');
-        }
 
+    if (targetPath === '/dashboard') {
         const { Dashboard } = await import('../pages/Dashboard.js');
+        const { initDashboardHandlers } = await import('./handlers/dashboard_handler.js');
         render.renderPage(Dashboard(), true);
+        initDashboardHandlers();
         return;
     }
-    
+
     render.renderPage(Login(), false);
 };
