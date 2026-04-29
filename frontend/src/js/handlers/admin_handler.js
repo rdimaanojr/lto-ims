@@ -1,4 +1,5 @@
 import { adminApi } from '../api/admin_api.js';
+import { generate } from '../utils/user_utils.js';
 
 const apiMap = {
     'form-driver': adminApi.addDriver,
@@ -6,6 +7,41 @@ const apiMap = {
     'form-vehicle': adminApi.addVehicle,
     'form-registration': adminApi.addRegistration,
     'form-violation': adminApi.addViolation
+};
+
+const fieldMap = {
+    'license_number': generate.generateLicenseNumber,
+    'full_name': generate.generateFullName,
+    'date_of_birth': generate.generateDateOfBirth,
+    'age': generate.generateAge,
+    'address': generate.generateAddress,
+    'issue_date': generate.generateIssueDate,
+    'expiry_date': generate.generateExpiryDate
+};
+
+const randomFieldMap = {
+    'license_number': generate.generateLicenseNumber,
+    'full_name': generate.generateFullName,
+    'date_of_birth': generate.generateDateOfBirth,
+    'age': generate.generateAge,
+    'address': generate.generateAddress,
+    'issue_date': generate.generateIssueDate,
+    'expiry_date': generate.generateExpiryDate,
+    'model': generate.generateModel,
+    'make': generate.generateVehicleMake,
+    'vehicle_type': generate.generateVehicleType,
+    'plate_number': generate.generatePlateNumber,
+    'engine_number': generate.generateEngineNumber,
+    'chassis_number': generate.generateChassisNumber,
+    'year': generate.generateYear,
+    'color': generate.generateColor,
+    'registration_date': generate.generateRegistrationDate,
+    'expiration_date': generate.generateExpirationDate,
+    'violation_type': generate.generateViolationType,
+    'date': generate.generateIssueDate,
+    'location': generate.generateLocation,
+    'apprehending_officer': generate.generateApprehendingOfficer,
+    'fine_amount': generate.generateFineAmount
 };
 
 const handleAdminSubmit = async (form) => {
@@ -70,6 +106,72 @@ export const initAdminHandlers = () => {
                 renderAccountTables();
             } else {
                 alert("Action failed.");
+            }
+        }
+
+        if (e.target.classList.contains('random-btn')) {
+            const field = e.target.dataset.field;
+            const form = e.target.closest('form');
+            const input = form.querySelector(`[name="${field}"]`);
+
+            if (!input) return;
+
+            let value;
+            if (field === 'sex') {
+                value = Math.random() > 0.5 ? 'M' : 'F';
+            } else if (field === 'license_type') {
+                const types = ['student', 'non-professional', 'professional'];
+                value = types[Math.floor(Math.random() * types.length)];
+            } else {
+                const genFunc = randomFieldMap[field];
+                if (genFunc) {
+                    value = await genFunc();
+                }
+            }
+
+            if (value !== undefined) {
+                input.value = value;
+            }
+        }
+
+        if (e.target.classList.contains('random-all-btn')) {
+            const formId = e.target.dataset.form;
+            const form = document.getElementById(`form-${formId}`);
+            if (!form) return;
+
+            let fields = [];
+            if (formId === 'driver') {
+                fields = ['license_number', 'full_name', 'date_of_birth', 'age', 'sex', 'address', 'license_type', 'issue_date', 'expiry_date'];
+            } else if (formId === 'model') {
+                fields = ['model', 'make', 'vehicle_type'];
+            } else if (formId === 'vehicle') {
+                fields = ['plate_number', 'engine_number', 'chassis_number', 'model', 'year', 'color', 'license_number'];
+            } else if (formId === 'registration') {
+                fields = ['registration_date', 'expiration_date', 'plate_number'];
+            } else if (formId === 'violation') {
+                fields = ['violation_type', 'date', 'location', 'apprehending_officer', 'fine_amount', 'license_number', 'plate_number'];
+            }
+
+            for (const field of fields) {
+                const input = form.querySelector(`[name="${field}"]`);
+                if (!input) continue;
+
+                let value;
+                if (field === 'sex') {
+                    value = Math.random() > 0.5 ? 'M' : 'F';
+                } else if (field === 'license_type') {
+                    const types = ['student', 'non-professional', 'professional'];
+                    value = types[Math.floor(Math.random() * types.length)];
+                } else {
+                    const genFunc = randomFieldMap[field];
+                    if (genFunc) {
+                        value = await genFunc();
+                    }
+                }
+
+                if (value !== undefined) {
+                    input.value = value;
+                }
             }
         }
     });

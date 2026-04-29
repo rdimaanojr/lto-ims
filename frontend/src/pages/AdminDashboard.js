@@ -49,55 +49,60 @@ export const AdminDashboard = () => {
                 <div id="forms-container">
                     <form id="form-driver">
                         <h3>Add Driver</h3>
-                        <div class="form-group"><label>License Number:</label><input type="text" name="license_number" required></div>
-                        <div class="form-group"><label>Full Name:</label><input type="text" name="full_name" required></div>
-                        <div class="form-group"><label>Date of Birth:</label><input type="date" name="date_of_birth" required></div>
-                        <div class="form-group"><label>Age:</label><input type="number" name="age"></div>
-                        <div class="form-group"><label>Sex:</label><select name="sex"><option value="M">Male</option><option value="F">Female</option></select></div>
-                        <div class="form-group"><label>Address:</label><input type="text" name="address"></div>
-                        <div class="form-group"><label>License Type:</label><select name="license_type"><option value="student">Student</option><option value="non-professional">Non-Professional</option><option value="professional">Professional</option></select></div>
-                        <div class="form-group"><label>Issue Date:</label><input type="date" name="issue_date"></div>
-                        <div class="form-group"><label>Expiry Date:</label><input type="date" name="expiry_date"></div>
+                        <div class="form-group"><label>License Number:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
+                        <div class="form-group"><label>Full Name:</label><input type="text" name="full_name" required><button type="button" class="random-btn" data-field="full_name">Random</button></div>
+                        <div class="form-group"><label>Date of Birth:</label><input type="date" name="date_of_birth" required><button type="button" class="random-btn" data-field="date_of_birth">Random</button></div>
+                        <div class="form-group"><label>Age:</label><input type="number" name="age"><button type="button" class="random-btn" data-field="age">Random</button></div>
+                        <div class="form-group"><label>Sex:</label><select name="sex"><option value="M">Male</option><option value="F">Female</option></select><button type="button" class="random-btn" data-field="sex">Random</button></div>
+                        <div class="form-group"><label>Address:</label><input type="text" name="address"><button type="button" class="random-btn" data-field="address">Random</button></div>
+                        <div class="form-group"><label>License Type:</label><select name="license_type"><option value="student">Student</option><option value="non-professional">Non-Professional</option><option value="professional">Professional</option></select><button type="button" class="random-btn" data-field="license_type">Random</button></div>
+                        <div class="form-group"><label>Issue Date:</label><input type="date" name="issue_date"><button type="button" class="random-btn" data-field="issue_date">Random</button></div>
+                        <div class="form-group"><label>Expiry Date:</label><input type="date" name="expiry_date"><button type="button" class="random-btn" data-field="expiry_date">Random</button></div>
+                        <button type="button" class="random-all-btn" data-form="driver">Random All</button>
                         <button type="submit">Add Driver</button>
                     </form>
                     <hr>
                     <form id="form-model">
                         <h3>Add Vehicle Model</h3>
-                        <div class="form-group"><label>Model Name:</label><input type="text" name="model" required></div>
-                        <div class="form-group"><label>Make:</label><input type="text" name="make" required></div>
-                        <div class="form-group"><label>Vehicle Type:</label><input type="text" name="vehicle_type" required></div>
+                        <div class="form-group"><label>Model Name:</label><input type="text" name="model" required><button type="button" class="random-btn" data-field="model">Random</button></div>
+                        <div class="form-group"><label>Make:</label><input type="text" name="make" required><button type="button" class="random-btn" data-field="make">Random</button></div>
+                        <div class="form-group"><label>Vehicle Type:</label><input type="text" name="vehicle_type" required><button type="button" class="random-btn" data-field="vehicle_type">Random</button></div>
+                        <button type="button" class="random-all-btn" data-form="model">Random All</button>
                         <button type="submit">Add Model</button>
                     </form>
                     <hr>
                     <form id="form-vehicle">
                         <h3>Add Vehicle</h3>
-                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required></div>
-                        <div class="form-group"><label>Engine Number:</label><input type="text" name="engine_number" required></div>
-                        <div class="form-group"><label>Chassis Number:</label><input type="text" name="chassis_number" required></div>
-                        <div class="form-group"><label>Model:</label><input type="text" name="model" required></div>
-                        <div class="form-group"><label>Year:</label><input type="number" name="year"></div>
-                        <div class="form-group"><label>Color:</label><input type="text" name="color"></div>
-                        <div class="form-group"><label>Owner License #:</label><input type="text" name="license_number" required></div>
+                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number">Random</button></div>
+                        <div class="form-group"><label>Engine Number:</label><input type="text" name="engine_number" required><button type="button" class="random-btn" data-field="engine_number">Random</button></div>
+                        <div class="form-group"><label>Chassis Number:</label><input type="text" name="chassis_number" required><button type="button" class="random-btn" data-field="chassis_number">Random</button></div>
+                        <div class="form-group"><label>Model:</label><input type="text" name="model" required><button type="button" class="random-btn" data-field="model">Random</button></div>
+                        <div class="form-group"><label>Year:</label><input type="number" name="year"><button type="button" class="random-btn" data-field="year">Random</button></div>
+                        <div class="form-group"><label>Color:</label><input type="text" name="color"><button type="button" class="random-btn" data-field="color">Random</button></div>
+                        <div class="form-group"><label>Owner License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
+                        <button type="button" class="random-all-btn" data-form="vehicle">Random All</button>
                         <button type="submit">Add Vehicle</button>
                     </form>
                     <hr>
                     <form id="form-registration">
                         <h3>Add Registration</h3>
-                        <div class="form-group"><label>Registration Date:</label><input type="date" name="registration_date" required></div>
-                        <div class="form-group"><label>Expiration Date:</label><input type="date" name="expiration_date" required></div>
-                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required></div>
+                        <div class="form-group"><label>Registration Date:</label><input type="date" name="registration_date" required><button type="button" class="random-btn" data-field="registration_date">Random</button></div>
+                        <div class="form-group"><label>Expiration Date:</label><input type="date" name="expiration_date" required><button type="button" class="random-btn" data-field="expiration_date">Random</button></div>
+                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number">Random</button></div>
+                        <button type="button" class="random-all-btn" data-form="registration">Random All</button>
                         <button type="submit">Register Vehicle</button>
                     </form>
                     <hr>
                     <form id="form-violation">
                         <h3>Add Violation</h3>
-                        <div class="form-group"><label>Violation Type:</label><input type="text" name="violation_type" required></div>
-                        <div class="form-group"><label>Date:</label><input type="date" name="date" required></div>
-                        <div class="form-group"><label>Location:</label><input type="text" name="location" required></div>
-                        <div class="form-group"><label>Apprehending Officer:</label><input type="text" name="apprehending_officer"></div>
-                        <div class="form-group"><label>Fine Amount:</label><input type="number" name="fine_amount" step="0.01"></div>
-                        <div class="form-group"><label>Driver License #:</label><input type="text" name="license_number" required></div>
-                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required></div>
+                        <div class="form-group"><label>Violation Type:</label><input type="text" name="violation_type" required><button type="button" class="random-btn" data-field="violation_type">Random</button></div>
+                        <div class="form-group"><label>Date:</label><input type="date" name="date" required><button type="button" class="random-btn" data-field="date">Random</button></div>
+                        <div class="form-group"><label>Location:</label><input type="text" name="location" required><button type="button" class="random-btn" data-field="location">Random</button></div>
+                        <div class="form-group"><label>Apprehending Officer:</label><input type="text" name="apprehending_officer"><button type="button" class="random-btn" data-field="apprehending_officer">Random</button></div>
+                        <div class="form-group"><label>Fine Amount:</label><input type="number" name="fine_amount" step="0.01"><button type="button" class="random-btn" data-field="fine_amount">Random</button></div>
+                        <div class="form-group"><label>Driver License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
+                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number">Random</button></div>
+                        <button type="button" class="random-all-btn" data-form="violation">Random All</button>
                         <button type="submit">Add Violation</button>
                     </form>
                 </div>

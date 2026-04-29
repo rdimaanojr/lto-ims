@@ -220,7 +220,7 @@ const generateLicenseNumber = () => {
     const office = String(Math.floor(Math.random() * 90) + 10);
     const year = String(Math.floor(Math.random() * 90) + 10);
     const serial = String(Math.floor(Math.random() * 900000) + 100000);
-    return `${series}-${office}-${year}-${serial}`;
+    return `${series}${office}-${year}-${serial}`;
 };
 const validateLicenseNumber = (val) => {
     const regex = /^[A-Z]\d{2}-\d{2}-\d{6}$/;
