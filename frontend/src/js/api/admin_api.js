@@ -47,5 +47,17 @@ export const adminApi = {
         request(`/api/admin/reject-account?id=${id}`, 'POST'),
 
     deleteAccount: (id) =>
-        request(`/api/admin/delete-account?id=${id}`, 'DELETE')
+        request(`/api/admin/delete-account?id=${id}`, 'DELETE'),
+
+    deleteDriver: (id) =>
+        request(`/api/admin/delete-driver?id=${id}`, 'DELETE'),
+
+    deleteVehicle: (id) =>
+        request(`/api/admin/delete-vehicle?id=${id}`, 'DELETE'),
+
+    deleteRegistration: (id) =>
+        request(`/api/admin/delete-registration?id=${id}`, 'DELETE'),
+
+    deleteViolation: (id) =>
+        request(`/api/admin/delete-violation?id=${id}`, 'DELETE')
 };

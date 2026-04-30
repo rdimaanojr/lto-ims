@@ -1,6 +1,8 @@
 // field validators and parsers of field values or whatever
 // will be used to validate and generate randomizers to help data population
 
+import { userApi } from "../api/user_api.js";
+
 // Dummy Data Lists
 const SERIES = ['A', 'B', 'C', 'D'];
 const FIRST_NAMES = [
@@ -153,13 +155,26 @@ import { regions } from "./psgc/regions.js";
 //     NN - office district or something 
 //     NN - year of issuance
 // NNNNNN - unique serial
-const generateLicenseNumber = () => {
+const generateLicenseNumber = (issueDate) => {
+    const dateObj = issueDate ? new Date(issueDate) : new Date(generateIssueDate());
     const series = SERIES[Math.floor(Math.random() * SERIES.length)];
-    const office = String(Math.floor(Math.random() * 90) + 10);
-    const year = String(Math.floor(Math.random() * 90) + 10);
-    const serial = String(Math.floor(Math.random() * 900000) + 100000);
+    const office = String(Math.floor(Math.random() * 99)).padStart(2, '0');
+    const year = String(dateObj.getFullYear() % 100).padStart(2, '0');
+    const serial = String(Math.floor(Math.random() * 100000)).padStart(6, '0');
     return `${series}${office}-${year}-${serial}`;
 };
+
+const generateExistingLicenseNumber = async () => {
+    try {
+        const response = await userApi.getLicenseNumbers();
+        const list = response.data?.license_numbers || [];      
+        if (list.length === 0) return generate.generateLicenseNumber();
+        return list[Math.floor(Math.random() * list.length)];
+    } catch (err) {
+        return generate.generateLicenseNumber();
+    }
+};
+
 const validateLicenseNumber = (val) => {
     const regex = /^[A-Z]\d{2}-\d{2}-\d{6}$/;
     return regex.test(val);
@@ -233,6 +248,16 @@ const parseAge = (val) => {
     return parseInt(val, 10);
 };
 
+const generateSex = () => {
+    return Math.random() > 0.5 ? 'M' : 'F';
+};
+const validateSex = (val) => {
+    return val === 'M' || val === 'F';
+};
+const parseSex = (val) => {
+    return val === 'M' ? "Male" : "Female";
+};
+
 // address : varchar 100
 // generated with PSGC city data when available
 const generateAddress = async () => {
@@ -265,6 +290,7 @@ const validateLicenseType = (val) => {
 const parseLicenseType = (val) => {
     return val;
 };
+
 // 1 to 5 years
 // license_status
 // enum: valid, expired, suspended, revoked
@@ -282,11 +308,9 @@ const parseLicenseStatus = (val) => {
 // make sure this is also the same with the two-digit license number
 const generateIssueDate = () => {
     const today = new Date();
-    const pastYears = Math.floor(Math.random() * 10) + 1;
-    const issueYear = today.getFullYear() - pastYears;
-    const issueMonth = Math.floor(Math.random() * 12);
-    const issueDay = Math.floor(Math.random() * 28) + 1;
-    const date = new Date(issueYear, issueMonth, issueDay);
+    // upto 20 years in the past
+    const offsetDays = Math.floor(Math.random() * 365 * 20);
+    const date = new Date(today.getTime() - offsetDays * 24 * 60 * 60 * 1000);
     return date.toISOString().split('T')[0];
 };
 const validateIssueDate = (val) => {
@@ -299,11 +323,11 @@ const parseIssueDate = (val) => {
 
 // expiry_date
 // must be after issue_date
-const generateExpiryDate = () => {
-    const issueDate = new Date(generateIssueDate());
-    const yearsToAdd = Math.floor(Math.random() * 5) + 1;
-    issueDate.setFullYear(issueDate.getFullYear() + yearsToAdd);
-    return issueDate.toISOString().split('T')[0];
+const generateExpiryDate = (issueDate) => {
+    const dateObj = issueDate ? new Date(issueDate) : new Date(generateIssueDate());
+    const yearsToAdd = Math.floor(Math.random() * 10) + 1;
+    dateObj.setFullYear(dateObj.getFullYear() + yearsToAdd);
+    return dateObj.toISOString().split('T')[0];
 };
 const validateExpiryDate = (val, issueDate) => {
     if (!isNaN(Date.parse(val)) && issueDate) {
@@ -384,6 +408,18 @@ const generatePlateNumber = () => {
     ];
     return formats[Math.floor(Math.random() * formats.length)]();
 };
+
+const generateExistingPlateNumber = async () => {
+    try {
+        const response = await userApi.getPlateNumbers();
+        const list = response.data?.plate_numbers || [];
+        if (list.length === 0) return generate.generatePlateNumber();
+        return list[Math.floor(Math.random() * list.length)];
+    } catch (err) {
+        return generate.generatePlateNumber();
+    }
+};   
+
 const validatePlateNumber = (val) => {
     const regex1 = /^[A-Z]{3} \d{4}$/;
     const regex2 = /^\d{3}[A-Z]{3}$/;
@@ -475,8 +511,9 @@ const parseRegistrationNumber = (val) => {
 // registration_date : just valid date
 const generateRegistrationDate = () => {
     const today = new Date();
-    const pastDays = Math.floor(Math.random() * 365 * 5);
-    const regDate = new Date(today.getTime() - pastDays * 24 * 60 * 60 * 1000);
+    // upto (-15, -5) years in the past
+    const offsetDays = Math.floor(Math.random() * 365 * 10) - (365 * 15);
+    const regDate = new Date(today.getTime() + offsetDays * 24 * 60 * 60 * 1000);
     return regDate.toISOString().split('T')[0];
 };
 const validateRegistrationDate = (val) => {
@@ -502,8 +539,8 @@ const parseRegistrationStatus = (val) => {
 // expiration_date : just valid date
 const generateExpirationDate = () => {
     const today = new Date();
-    const futureDays = Math.floor(Math.random() * 365 * 2) + 30;
-    const expDate = new Date(today.getTime() + futureDays * 24 * 60 * 60 * 1000);
+    const offsetDays = Math.floor(Math.random() * 365 * 10) - (365 * 5);
+    const expDate = new Date(today.getTime() + offsetDays * 24 * 60 * 60 * 1000);
     return expDate.toISOString().split('T')[0];
 };
 const validateExpirationDate = (val) => {
@@ -594,7 +631,7 @@ const parseViolationStatus = (val) => {
 
 // fine amount : decimal two digits
 const generateFineAmount = () => {
-    return Math.floor(Math.random() * 100000) + Math.random();
+    return Math.floor(Math.random() * 100000).toFixed(2);
 };
 const validateFineAmount = (val) => {
     return typeof val === 'number' && val >= 0;
@@ -615,10 +652,11 @@ const parseVerification = (val) => {
 };
 
 export const generate = {
-    generateLicenseNumber,
+    generateLicenseNumber, generateExistingLicenseNumber,
     generateFullName,
     generateDateOfBirth,
     generateAge,
+    generateSex,
     generateAddress,
     generateLicenseType,
     generateLicenseStatus,
@@ -628,6 +666,7 @@ export const generate = {
     generateVehicleMake,
     generateVehicleType,
     generatePlateNumber,
+    generateExistingPlateNumber,
     generateEngineNumber,
     generateChassisNumber,
     generateModel,
@@ -652,6 +691,7 @@ export const validate = {
     validateFullName,
     validateDateOfBirth,
     validateAge,
+    validateSex,
     validateAddress,
     validateLicenseType,
     validateLicenseStatus,
@@ -685,6 +725,7 @@ export const parse = {
     parseFullName,
     parseDateOfBirth,
     parseAge,
+    parseSex,
     parseAddress,
     parseLicenseType,
     parseLicenseStatus,

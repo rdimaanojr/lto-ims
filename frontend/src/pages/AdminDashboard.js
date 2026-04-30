@@ -52,7 +52,6 @@ export const AdminDashboard = () => {
                         <div class="form-group"><label>License Number:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
                         <div class="form-group"><label>Full Name:</label><input type="text" name="full_name" required><button type="button" class="random-btn" data-field="full_name">Random</button></div>
                         <div class="form-group"><label>Date of Birth:</label><input type="date" name="date_of_birth" required><button type="button" class="random-btn" data-field="date_of_birth">Random</button></div>
-                        <div class="form-group"><label>Age:</label><input type="number" name="age"><button type="button" class="random-btn" data-field="age">Random</button></div>
                         <div class="form-group"><label>Sex:</label><select name="sex"><option value="M">Male</option><option value="F">Female</option></select><button type="button" class="random-btn" data-field="sex">Random</button></div>
                         <div class="form-group"><label>Address:</label><input type="text" name="address"><button type="button" class="random-btn" data-field="address">Random</button></div>
                         <div class="form-group"><label>License Type:</label><select name="license_type"><option value="student">Student</option><option value="non-professional">Non-Professional</option><option value="professional">Professional</option></select><button type="button" class="random-btn" data-field="license_type">Random</button></div>
@@ -72,7 +71,7 @@ export const AdminDashboard = () => {
                         <div class="form-group"><label>Vehicle Type:</label><input type="text" name="vehicle_type" required><button type="button" class="random-btn" data-field="vehicle_type">Random</button></div>
                         <div class="form-group"><label>Year:</label><input type="number" name="year"><button type="button" class="random-btn" data-field="year">Random</button></div>
                         <div class="form-group"><label>Color:</label><input type="text" name="color"><button type="button" class="random-btn" data-field="color">Random</button></div>
-                        <div class="form-group"><label>Owner License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
+                        <div class="form-group"><label>Owner License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number" data-type="existing">Random</button></div>
                         <button type="button" class="random-all-btn" data-form="vehicle">Random All</button>
                         <button type="submit">Add Vehicle</button>
                     </form>
@@ -81,7 +80,7 @@ export const AdminDashboard = () => {
                         <h3>Add Registration</h3>
                         <div class="form-group"><label>Registration Date:</label><input type="date" name="registration_date" required><button type="button" class="random-btn" data-field="registration_date">Random</button></div>
                         <div class="form-group"><label>Expiration Date:</label><input type="date" name="expiration_date" required><button type="button" class="random-btn" data-field="expiration_date">Random</button></div>
-                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number">Random</button></div>
+                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number" data-type="existing">Random</button></div>
                         <button type="button" class="random-all-btn" data-form="registration">Random All</button>
                         <button type="submit">Register Vehicle</button>
                     </form>
@@ -93,8 +92,9 @@ export const AdminDashboard = () => {
                         <div class="form-group"><label>Location:</label><input type="text" name="location" required><button type="button" class="random-btn" data-field="location">Random</button></div>
                         <div class="form-group"><label>Apprehending Officer:</label><input type="text" name="apprehending_officer"><button type="button" class="random-btn" data-field="apprehending_officer">Random</button></div>
                         <div class="form-group"><label>Fine Amount:</label><input type="number" name="fine_amount" step="0.01"><button type="button" class="random-btn" data-field="fine_amount">Random</button></div>
-                        <div class="form-group"><label>Driver License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
-                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number">Random</button></div>
+                        <div class="form-group"><label>Violation Status:</label><select name="violation_status"><option value="unpaid">Unpaid</option><option value="paid">Paid</option><option value="contested">Contested</option></select><button type="button" class="random-btn" data-field="violation_status">Random</button></div>
+                        <div class="form-group"><label>Driver License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number" data-type="existing">Random</button></div>
+                        <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number" data-type="existing">Random</button></div>
                         <button type="button" class="random-all-btn" data-form="violation">Random All</button>
                         <button type="submit">Add Violation</button>
                     </form>

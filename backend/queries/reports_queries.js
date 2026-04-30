@@ -24,11 +24,13 @@ export const selectFilteredDrivers = async (type, status, sex, minAge, maxAge) =
 export const selectVehiclesByLicense = async (licenseNumber) => {
     const sql = `
         SELECT
-            v.*,
-            m.make,
-            m.vehicle_type
+            v.plate_number,
+            v.model,
+            v.make,
+            v.year,
+            v.vehicle_type,
+            v.color
         FROM vehicle v
-        JOIN vehicle_model m ON v.model = m.model
         WHERE
             v.license_number = ?
         ORDER BY
@@ -45,14 +47,13 @@ export const selectExpiredVehiclesAsOfDate = async (givenDate) => {
             r.registration_number,
             r.plate_number,
             v.model,
-            m.vehicle_type,
+            v.vehicle_type,
             v.color,
             r.registration_date,
             r.expiration_date,
             r.registration_status
         FROM registration r
         JOIN vehicle v ON r.plate_number = v.plate_number
-        JOIN vehicle_model m ON v.model = m.model
         WHERE
             r.expiration_date < ?
             OR r.registration_status = 'expired'
@@ -115,14 +116,11 @@ export const selectVehiclesWithViolationsByLocation = async (givenLocation) => {
     const sql = `
         SELECT
             v.*,
-            m.make,
-            m.vehicle_type,
             vio.violation_type,
             vio.location,
             vio.date
         FROM vehicle v
         JOIN violation vio ON v.plate_number = vio.plate_number
-        JOIN vehicle_model m ON v.model = m.model
         WHERE
             vio.location REGEXP ?
         ORDER BY

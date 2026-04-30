@@ -9,28 +9,21 @@ const apiMap = {
     'form-violation': adminApi.addViolation
 };
 
-const fieldMap = {
-    'license_number': generate.generateLicenseNumber,
-    'full_name': generate.generateFullName,
-    'date_of_birth': generate.generateDateOfBirth,
-    'age': generate.generateAge,
-    'address': generate.generateAddress,
-    'issue_date': generate.generateIssueDate,
-    'expiry_date': generate.generateExpiryDate
-};
-
 const randomFieldMap = {
     'license_number': generate.generateLicenseNumber,
+    'existing_license_number': generate.generateExistingLicenseNumber,
     'full_name': generate.generateFullName,
     'date_of_birth': generate.generateDateOfBirth,
-    'age': generate.generateAge,
+    'sex': generate.generateSex,
     'address': generate.generateAddress,
+    'license_type': generate.generateLicenseType,
     'issue_date': generate.generateIssueDate,
     'expiry_date': generate.generateExpiryDate,
     'model': generate.generateModel,
     'make': generate.generateVehicleMake,
     'vehicle_type': generate.generateVehicleType,
     'plate_number': generate.generatePlateNumber,
+    'existing_plate_number': generate.generateExistingPlateNumber,
     'engine_number': generate.generateEngineNumber,
     'chassis_number': generate.generateChassisNumber,
     'year': generate.generateYear,
@@ -41,6 +34,7 @@ const randomFieldMap = {
     'date': generate.generateIssueDate,
     'location': generate.generateLocation,
     'apprehending_officer': generate.generateApprehendingOfficer,
+    'violation_status': generate.generateViolationStatus,
     'fine_amount': generate.generateFineAmount
 };
 
@@ -109,29 +103,51 @@ export const initAdminHandlers = () => {
             }
         }
 
+        if (e.target.classList.contains('record-delete-btn')) {
+            const tableId = e.target.dataset.table;
+            const id = e.target.dataset.id;
+            const deleteMap = {
+                'table-drivers': adminApi.deleteDriver,
+                'table-vehicles': adminApi.deleteVehicle,
+                'table-registrations': adminApi.deleteRegistration,
+                'table-violations': adminApi.deleteViolation
+            };
+
+            const deleteFn = deleteMap[tableId];
+            if (!deleteFn) return;
+
+            if (!confirm('Are you sure you want to delete this record?')) return;
+
+            const res = await deleteFn(id);
+            if (res && res.status >= 200 && res.status < 300) {
+                alert('Record deleted successfully.');
+                renderDataTables();
+            } else {
+                alert('Failed to delete the record.');
+            }
+        }
+
         if (e.target.classList.contains('random-btn')) {
             const field = e.target.dataset.field;
+            const isExisting = e.target.dataset.type === 'existing';
             const form = e.target.closest('form');
             const input = form.querySelector(`[name="${field}"]`);
 
-            if (!input) return;
+            const issueDateVal = form.querySelector('[name="issue_date"]')?.value
 
             let value;
-            if (field === 'sex') {
-                value = Math.random() > 0.5 ? 'M' : 'F';
-            } else if (field === 'license_type') {
-                const types = ['student', 'non-professional', 'professional'];
-                value = types[Math.floor(Math.random() * types.length)];
+            if (isExisting) {
+                value = await randomFieldMap[`existing_${field}`]();
+            } else if (field === 'license_number') {
+                value = generate.generateLicenseNumber(issueDateVal);
+            } else if (field === 'expiry_date') {
+                value = generate.generateExpiryDate(issueDateVal);
             } else {
                 const genFunc = randomFieldMap[field];
-                if (genFunc) {
-                    value = await genFunc();
-                }
+                if (genFunc) value = await genFunc();
             }
 
-            if (value !== undefined) {
-                input.value = value;
-            }
+            if (input && value) input.value = value;
         }
 
         if (e.target.classList.contains('random-all-btn')) {
@@ -141,37 +157,39 @@ export const initAdminHandlers = () => {
 
             let fields = [];
             if (formId === 'driver') {
-                fields = ['license_number', 'full_name', 'date_of_birth', 'age', 'sex', 'address', 'license_type', 'issue_date', 'expiry_date'];
-            } else if (formId === 'model') {
-                fields = ['model', 'make', 'vehicle_type'];
-            } else if (formId === 'vehicle') {
+                fields = ['issue_date', 'license_number', 'full_name', 'date_of_birth', 'sex', 'address', 'license_type', 'expiry_date'];
+            }
+            // else if (formId === 'model') {
+            //     fields = ['model', 'make', 'vehicle_type'];
+            // }
+            else if (formId === 'vehicle') {
                 fields = ['plate_number', 'engine_number', 'chassis_number', 'model', 'make', 'year', 'vehicle_type', 'color', 'license_number'];
             } else if (formId === 'registration') {
                 fields = ['registration_date', 'expiration_date', 'plate_number'];
             } else if (formId === 'violation') {
-                fields = ['violation_type', 'date', 'location', 'apprehending_officer', 'fine_amount', 'license_number', 'plate_number'];
+                fields = ['violation_type', 'date', 'location', 'apprehending_officer', 'fine_amount', 'violation_status', 'license_number', 'plate_number'];
             }
 
             for (const field of fields) {
                 const input = form.querySelector(`[name="${field}"]`);
-                if (!input) continue;
+                const btn = input.nextElementSibling;
+                const isExisting = btn?.dataset.type === 'existing';
+
+                const issueDateVal = form.querySelector('[name="issue_date"]')?.value
 
                 let value;
-                if (field === 'sex') {
-                    value = Math.random() > 0.5 ? 'M' : 'F';
-                } else if (field === 'license_type') {
-                    const types = ['student', 'non-professional', 'professional'];
-                    value = types[Math.floor(Math.random() * types.length)];
+                if (isExisting) {
+                    value = await randomFieldMap[`existing_${field}`]();
+                } else if (field === 'license_number') {
+                    value = generate.generateLicenseNumber(issueDateVal);
+                } else if (field === 'expiry_date') {
+                    value = generate.generateExpiryDate(issueDateVal);
                 } else {
                     const genFunc = randomFieldMap[field];
-                    if (genFunc) {
-                        value = await genFunc();
-                    }
+                    if (genFunc) value = await genFunc();
                 }
 
-                if (value !== undefined) {
-                    input.value = value;
-                }
+                if (input && value) input.value = value;
             }
         }
     });
@@ -191,8 +209,21 @@ export const renderDataTables = async () => {
         }
 
         const columns = Object.keys(data[0]);
-        let content = `<table><thead><tr>${columns.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
-        content += data.map(row => `<tr>${columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}</tr>`).join('');
+        const primaryKeyMap = {
+            'table-drivers': 'license_number',
+            'table-vehicles': 'plate_number',
+            'table-registrations': 'registration_number',
+            'table-violations': 'violation_id'
+        };
+        const primaryKey = primaryKeyMap[containerId] || columns[0];
+        const columnHeaders = [...columns, 'Action'];
+
+        let content = `<table><thead><tr>${columnHeaders.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+        content += data.map(row => {
+            const cells = columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('');
+            const recordId = row[primaryKey];
+            return `<tr>${cells}<td><button class="record-delete-btn" data-table="${containerId}" data-id="${recordId}">Delete</button></td></tr>`;
+        }).join('');
         content += `</tbody></table>`;
         container.innerHTML = content;
     };

@@ -1,6 +1,7 @@
 import db from "../db.js";
 
 export const addDriver = (data) => {
+    data.age = Math.floor((new Date() - new Date(data.date_of_birth)) / (365.25 * 24 * 60 * 60 * 1000));
     return db.execute(
         `INSERT INTO driver (license_number, full_name, date_of_birth, age, sex, address, license_type, issue_date, expiry_date) 
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -22,17 +23,19 @@ export const addVehicle = (data) => {
 };
 
 export const addRegistration = (data) => {
-    return db.execute(
-        `INSERT INTO registration (registration_date, expiration_date, plate_number) VALUES (?, ?, ?)`,
-        [data.registration_date, data.expiration_date, data.plate_number]
+    data.registration_status = new Date(data.expiration_date) < new Date() ? 'expired' : 'active';
+    return db.execute(`
+        INSERT INTO registration (registration_date, expiration_date, registration_status, plate_number)
+        VALUES (?, ?, ?, ?)`,
+        [data.registration_date, data.expiration_date, data.registration_status, data.plate_number]
     );
 };
 
 export const addViolation = (data) => {
     return db.execute(
-        `INSERT INTO violation (violation_type, date, location, apprehending_officer, fine_amount, license_number, plate_number) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [data.violation_type, data.date, data.location, data.apprehending_officer, data.fine_amount, data.license_number, data.plate_number]
+        `INSERT INTO violation (violation_type, date, location, apprehending_officer, fine_amount, violation_status, license_number, plate_number) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [data.violation_type, data.date, data.location, data.apprehending_officer, data.fine_amount, data.violation_status, data.license_number, data.plate_number]
     );
 };
 
@@ -41,10 +44,10 @@ export const getAllDrivers = async () => {
     return rows;
 };
 
-export const getAllVehicleModels = async () => {
-    const [rows] = await db.execute("SELECT * FROM vehicle_model");
-    return rows;
-};
+// export const getAllVehicleModels = async () => {
+//     const [rows] = await db.execute("SELECT * FROM vehicle_model");
+//     return rows;
+// };
 
 export const getAllVehicles = async () => {
     const [rows] = await db.execute("SELECT * FROM vehicle");
@@ -59,6 +62,22 @@ export const getAllRegistrations = async () => {
 export const getAllViolations = async () => {
     const [rows] = await db.execute("SELECT * FROM violation");
     return rows;
+};
+
+export const deleteDriver = (id) => {
+    return db.execute("DELETE FROM driver WHERE license_number = ?", [id]);
+};
+
+export const deleteVehicle = (id) => {
+    return db.execute("DELETE FROM vehicle WHERE plate_number = ?", [id]);
+};
+
+export const deleteRegistration = (id) => {
+    return db.execute("DELETE FROM registration WHERE registration_number = ?", [id]);
+};
+
+export const deleteViolation = (id) => {
+    return db.execute("DELETE FROM violation WHERE violation_id = ?", [id]);
 };
 
 export const getAllAccounts = async () => {

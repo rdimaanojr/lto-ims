@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import { authorize, authorizeAdmin } from './authorization.js';
 import * as endpoints from './endpoints/endpoints.js';
 import * as authEndpoints from './endpoints/auth_endpoints.js';
+import * as userEndpoints from './endpoints/user_endpoints.js';
 import * as reportsEndpoints from './endpoints/reports_endpoints.js';
 import * as adminEndpoints from './endpoints/admin_endpoints.js';
 
@@ -75,6 +76,10 @@ const routes = {
         guard: authorizeAdmin
     },
 
+    // user endpoints
+    'GET /api/user/license-numbers': { handler: userEndpoints.getLicenseNumbers, guard: authorize },
+    'GET /api/user/plate-numbers': { handler: userEndpoints.getPlateNumbers, guard: authorize },
+
     // admin endpoints  
     'POST /api/admin/add-driver': { handler: adminEndpoints.postAddDriver, guard: authorizeAdmin },
     'POST /api/admin/add-model': { handler: adminEndpoints.postAddModel, guard: authorizeAdmin },
@@ -92,6 +97,10 @@ const routes = {
     'POST /api/admin/approve-account': { handler: adminEndpoints.postApproveAccount, guard: authorizeAdmin },
     'POST /api/admin/reject-account': { handler: adminEndpoints.postRejectAccount, guard: authorizeAdmin },
     'DELETE /api/admin/delete-account': { handler: adminEndpoints.postDeleteAccount, guard: authorizeAdmin },
+    'DELETE /api/admin/delete-driver': { handler: adminEndpoints.deleteDriver, guard: authorizeAdmin },
+    'DELETE /api/admin/delete-vehicle': { handler: adminEndpoints.deleteVehicle, guard: authorizeAdmin },
+    'DELETE /api/admin/delete-registration': { handler: adminEndpoints.deleteRegistration, guard: authorizeAdmin },
+    'DELETE /api/admin/delete-violation': { handler: adminEndpoints.deleteViolation, guard: authorizeAdmin },
 };
 
 const __filename = fileURLToPath(import.meta.url);
@@ -124,7 +133,7 @@ export const handleRequest = async (req, res) => {
     const origin = req.headers.origin || FRONTEND_URL;
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     // pre-flight check

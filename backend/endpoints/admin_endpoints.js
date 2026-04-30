@@ -1,10 +1,11 @@
+import { get } from 'node:http';
 import * as admin from '../queries/admin_queries.js';
 import { getJsonBody } from '../utils.js';
 
-const handleAdminPost = async (req, res, queryFn) => {
+const handleAdminPost = async (req, res, queryFn, extraData = {}) => {
     try {
         const data = await getJsonBody(req);
-        await queryFn(data);
+        await queryFn({ ...data, ...extraData });
         res.writeHead(201);
         res.end(JSON.stringify({ message: "Entry added successfully" }));
     } catch (err) {
@@ -14,10 +15,20 @@ const handleAdminPost = async (req, res, queryFn) => {
     }
 };
 
-export const postAddDriver = (req, res) => handleAdminPost(req, res, admin.addDriver);
-export const postAddModel = (req, res) => handleAdminPost(req, res, admin.addVehicleModel);
-export const postAddVehicle = (req, res) => handleAdminPost(req, res, admin.addVehicle);
-export const postAddRegistration = (req, res) => handleAdminPost(req, res, admin.addRegistration);
+export const postAddDriver = async (req, res) => {
+    await handleAdminPost(req, res, admin.addDriver);
+};
+
+export const postAddModel = async (req, res) => {
+    await handleAdminPost(req, res, admin.addVehicleModel);
+};
+export const postAddVehicle = async (req, res) => {
+    await handleAdminPost(req, res, admin.addVehicle);
+};
+export const postAddRegistration = async (req, res) => {
+    await handleAdminPost(req, res, admin.addRegistration);
+};
+
 export const postAddViolation = (req, res) => handleAdminPost(req, res, admin.addViolation);
 
 export const getDrivers = async (req, res) => {
@@ -25,10 +36,10 @@ export const getDrivers = async (req, res) => {
     res.end(JSON.stringify(data));
 };
 
-export const getModels = async (req, res) => {
-    const data = await admin.getAllVehicleModels();
-    res.end(JSON.stringify(data));
-};
+// export const getModels = async (req, res) => {
+//     const data = await admin.getAllVehicleModels();
+//     res.end(JSON.stringify(data));
+// };
 
 export const getVehicles = async (req, res) => {
     const data = await admin.getAllVehicles();
@@ -80,5 +91,29 @@ export const postRejectAccount = async (req, res) => {
 export const postDeleteAccount = async (req, res) => {
     const id = getId(req);
     await admin.deleteAccount(id);
+    res.end(JSON.stringify({ status: 200, message: "Deleted" }));
+};
+
+export const deleteDriver = async (req, res) => {
+    const id = getId(req);
+    await admin.deleteDriver(id);
+    res.end(JSON.stringify({ status: 200, message: "Deleted" }));
+};
+
+export const deleteVehicle = async (req, res) => {
+    const id = getId(req);
+    await admin.deleteVehicle(id);
+    res.end(JSON.stringify({ status: 200, message: "Deleted" }));
+};
+
+export const deleteRegistration = async (req, res) => {
+    const id = getId(req);
+    await admin.deleteRegistration(id);
+    res.end(JSON.stringify({ status: 200, message: "Deleted" }));
+};
+
+export const deleteViolation = async (req, res) => {
+    const id = getId(req);
+    await admin.deleteViolation(id);
     res.end(JSON.stringify({ status: 200, message: "Deleted" }));
 };
