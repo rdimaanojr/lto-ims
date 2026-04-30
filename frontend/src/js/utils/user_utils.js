@@ -45,19 +45,19 @@ const LICENSE_TYPES = [
     'professional'
 ];
 const STREET_NAMES = [
-  // Generate Purok 1 to 10
-  ...Array.from({ length: 10 }, (_, i) => `Purok ${i + 1}`),
+    // Generate Purok 1 to 10
+    ...Array.from({ length: 10 }, (_, i) => `Purok ${i + 1}`),
 
-  // Generate Sitio + Last Names
-  ...LAST_NAMES.map(name => `Sitio ${name}`),
+    // Generate Sitio + Last Names
+    ...LAST_NAMES.map(name => `Sitio ${name}`),
 
-  // Generate EVERY combination of Last Name + (Street, Avenue, Road, and Boulevard)
-  ...LAST_NAMES.flatMap(name => [
-    `${name} Street`,
-    `${name} Avenue`,
-    `${name} Road`,
-    `${name} Boulevard`
-  ])
+    // Generate EVERY combination of Last Name + (Street, Avenue, Road, and Boulevard)
+    ...LAST_NAMES.flatMap(name => [
+        `${name} Street`,
+        `${name} Avenue`,
+        `${name} Road`,
+        `${name} Boulevard`
+    ])
 ];
 const LICENSE_STATUSES = [
     'valid',
@@ -78,6 +78,7 @@ const VEHICLE_MODELS = [
     'Hyundai Starex'
 ]
 const VEHICLE_MAKES = [
+    'Audi',
     'Honda',
     'Toyota',
     'Ford',
@@ -87,7 +88,10 @@ const VEHICLE_MAKES = [
     'Mitsubishi',
     'Isuzu',
     'Mercedes-Benz',
-    'Hyundai'
+    'Hyundai',
+    'Bentley',
+    'GMC',
+    'Hyundai',
 ];
 const VEHICLE_TYPES = [
     'motorbike',
@@ -96,7 +100,8 @@ const VEHICLE_TYPES = [
     'car',
     'light truck',
     'large truck',
-    'bus'
+    'bus',
+    'bmw',
 ];
 const COLORS = [
     'red',
@@ -131,83 +136,11 @@ const VIOLATION_TYPES = [
     'Overloading'
 ];
 
-const PSGC_ENDPOINTS = {
-    regions: 'https://psgc.cloud/api/regions',
-    provinces: 'https://psgc.cloud/api/provinces',
-    cities: 'https://psgc.cloud/api/cities',
-    municipalities: 'https://psgc.cloud/api/municipalities',
-    barangays: 'https://psgc.cloud/api/barangays'
-};
-
-const PSGC_DEFAULTS= {
-    regions: [
-        { code: '010000000', name: 'NCR' },
-        { code: '020000000', name: 'CAR' },
-        { code: '030000000', name: 'Region I' }
-    ],
-    provinces: [
-        { code: '011300000', name: 'Metro Manila' },
-        { code: '021800000', name: 'Benguet' },
-        { code: '031800000', name: 'Ilocos Norte' }
-    ],
-    cities: [
-        { code: '014600000', name: 'Manila', type: 'City', district: 'NCR', zip_code: '1000', regionName: 'Metro Manila' },
-        { code: '040500000', name: 'Cebu City', type: 'City', district: 'Central Visayas', zip_code: '6000', regionName: 'Central Visayas' },
-        { code: '012700000', name: 'Quezon City', type: 'City', district: 'NCR', zip_code: '1100', regionName: 'Metro Manila' }
-    ],
-    municipalities: [
-        { code: '014671000', name: 'Pateros', type: 'Municipality', district: 'NCR', zip_code: '1600' },
-        { code: '041200000', name: 'Liloan', type: 'Municipality', district: 'Central Visayas', zip_code: '6002' },
-        { code: '037900000', name: 'Laoag', type: 'Municipality', district: 'Region I', zip_code: '2900' }
-    ],
-    barangays: [
-        { code: '014600001', name: 'Barangay 1', status: 'active' },
-        { code: '014600002', name: 'Barangay 2', status: 'active' },
-        { code: '014600003', name: 'Barangay 3', status: 'active' }
-    ]
-};
-
-const PSGC_CACHE = {
-    regions: null,
-    provinces: null,
-    cities: null,
-    municipalities: null,
-    barangays: null
-};
-
-const fetchPSGC = async (endpoint) => {
-    if (PSGC_CACHE[endpoint]) {
-        return PSGC_CACHE[endpoint];
-    }
-
-    try {
-        const response = await fetch(PSGC_ENDPOINTS[endpoint]);
-        if (!response.ok) throw new Error(`PSGC ${endpoint} fetch failed`);
-        const data = await response.json();
-        PSGC_CACHE[endpoint] = data;
-        return data;
-    } catch (error) {
-        PSGC_CACHE[endpoint] = PSGC_DEFAULTS[endpoint];
-        return PSGC_DEFAULTS[endpoint];
-    }
-};
-
-const fetchRegions = async () => await fetchPSGC('regions');
-const fetchProvinces = async () => await fetchPSGC('provinces');
-const fetchCities = async () => await fetchPSGC('cities');
-const fetchMunicipalities = async () => await fetchPSGC('municipalities');
-const fetchBarangays = async () => await fetchPSGC('barangays');
-
-const getAllLocations = async () => {
-    const cities = await fetchCities();
-    if (Array.isArray(cities) && cities.length) {
-        return cities.map((city) => {
-            const region = city.regionName || city.region || 'Unknown Region';
-            return `${city.name}, ${region}`;
-        });
-    }
-    return PSGC_DEFAULTS.cities.map((city) => `${city.name}, ${city.regionName || city.region || 'Unknown Region'}`);
-};
+import { barangays } from "./psgc/barangays.js";
+import { cities } from "./psgc/cities.js";
+import { municipalities } from "./psgc/municipalities.js";
+import { provinces } from "./psgc/provinces.js";
+import { regions } from "./psgc/regions.js";
 
 // license_number
 // 3-2-6 Format - XNN-NN-NNNNNN
@@ -279,7 +212,7 @@ const parseDateOfBirth = (val) => {
 // age
 // just make sure it's correct with date_of_birth and valid age
 const generateAge = () => {
-    return Math.floor(Math.random() * 99) + 18; 
+    return Math.floor(Math.random() * 99) + 18;
 };
 const validateAge = (val, dob) => {
     if (typeof val !== 'number' || val < 0 || val > 120) return false;
@@ -300,17 +233,15 @@ const parseAge = (val) => {
 const generateAddress = async () => {
     const houseNum = Math.floor(Math.random() * 999) + 1;
     const street = STREET_NAMES[Math.floor(Math.random() * STREET_NAMES.length)];
+    const barangay = barangays[Math.floor(Math.random() * barangays.length)];
+    const barangayName = barangay.name;
+    const cityName = (barangay.cityCode) ? cities.find(c => c.code === barangay.cityCode)?.name : null;
+    const municipalityName = (barangay.municipalityCode) ? municipalities.find(m => m.code === barangay.municipalityCode)?.name : null;
+    const provinceName = (barangay.provinceCode) ? provinces.find(p => p.code === barangay.provinceCode)?.name : null;
 
-    const cities = await fetchCities();
-    if (Array.isArray(cities) && cities.length) {
-        const city = cities[Math.floor(Math.random() * cities.length)];
-        const cityName = city.name || 'Unknown City';
-        const region = city.regionName || city.region || city.district || 'Unknown Region';
-        return `${houseNum} ${street}, ${cityName}, ${region}`;
-    }
-
-    return `${houseNum} ${street}, Manila, Metro Manila`;
+    return `${houseNum} ${street}, ${barangayName}${cityName ? ', ' + cityName : ''}${municipalityName ? ', ' + municipalityName : ''}${provinceName ? ', ' + provinceName : ''}`;
 };
+
 const validateAddress = (val) => {
     return typeof val === 'string' && val.length <= 100 && val.trim().length > 0;
 };
@@ -336,7 +267,7 @@ const generateLicenseStatus = () => {
     return LICENSE_STATUSES[Math.floor(Math.random() * LICENSE_STATUSES.length)];
 };
 const validateLicenseStatus = (val) => {
-    return LICENSE_STATUSES.includes(val); 
+    return LICENSE_STATUSES.includes(val);
 };
 const parseLicenseStatus = (val) => {
     return val;
@@ -776,13 +707,3 @@ export const parse = {
     parseFineAmount,
     parseVerification
 };
-
-export const get = {
-    fetchRegions,
-    fetchProvinces,
-    fetchCities,
-    fetchMunicipalities,
-    fetchBarangays,
-    getAllLocations
-};
-
