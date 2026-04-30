@@ -16,12 +16,21 @@ export const AdminDashboard = () => {
             table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #f4f4f4; }
-            .section-block { margin: 20px 0; }
+            .section-block { margin: 0 0; }
+
+            .sub-tabs { 
+                border-bottom: 1px dashed #ddd;
+                margin-bottom: 0;
+            }
+
+            .sub-tabs .tab-link { 
+                font-size: 0.9em; 
+                color: #777;
+            }
 
             [id^="table-"] {
                 overflow-y: auto;
                 margin-top: 10px;
-                padding: 20px 0;
             }
 
             .accounts-container { 
@@ -103,10 +112,27 @@ export const AdminDashboard = () => {
 
             <div id="view-records" class="tab-content">
                 <h2>Database Records</h2>
-                <div class="section-block"><h3>Drivers</h3><div id="table-drivers"></div></div><hr>
-                <div class="section-block"><h3>Vehicles</h3><div id="table-vehicles"></div></div><hr>
-                <div class="section-block"><h3>Registrations</h3><div id="table-registrations"></div></div><hr>
-                <div class="section-block"><h3>Violations</h3><div id="table-violations"></div></div>
+
+                <div class="tabs sub-tabs">
+                    <span id="tab-drivers" class="tab-link active">Drivers</span>
+                    <span id="tab-vehicles" class="tab-link">Vehicles</span>
+                    <span id="tab-registrations" class="tab-link">Registrations</span>
+                    <span id="tab-violations" class="tab-link">Violations</span>
+                </div>
+
+                <div id="view-drivers" class="tab-content active">
+                    <div id="table-drivers"></div>
+                </div>
+                <div id="view-vehicles" class="tab-content">
+                    <div id="table-vehicles"></div>
+                </div>
+                <div id="view-registrations" class="tab-content">
+                    <div id="table-registrations"></div>
+                </div>
+                <div id="view-violations" class="tab-content">
+                    <div id="table-violations"></div>
+                </div>
+
             </div>
 
             <div id="view-accounts" class="tab-content">

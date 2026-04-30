@@ -2,10 +2,11 @@ import db from "../db.js";
 
 export const addDriver = (data) => {
     data.age = Math.floor((new Date() - new Date(data.date_of_birth)) / (365.25 * 24 * 60 * 60 * 1000));
+    data.license_status = new Date(data.expiry_date) < new Date() ? 'expired' : 'valid';
     return db.execute(
-        `INSERT INTO driver (license_number, full_name, date_of_birth, age, sex, address, license_type, issue_date, expiry_date) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [data.license_number, data.full_name, data.date_of_birth, data.age, data.sex, data.address, data.license_type, data.issue_date, data.expiry_date]
+        `INSERT INTO driver (license_number, full_name, date_of_birth, age, sex, address, license_type, issue_date, expiry_date, license_status) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [data.license_number, data.full_name, data.date_of_birth, data.age, data.sex, data.address, data.license_type, data.issue_date, data.expiry_date, data.license_status]
     );
 };
 

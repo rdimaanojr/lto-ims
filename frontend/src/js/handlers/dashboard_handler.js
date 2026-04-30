@@ -1,4 +1,5 @@
 import { reportsApi } from "../api/reports_api.js";
+import { parseDate } from "../utils/utils.js";
 
 const apiMap = {
     'form-1': reportsApi.getDriversFiltered,
@@ -9,6 +10,7 @@ const apiMap = {
     'form-6': reportsApi.getTotalViolationsByYear,
     'form-7': reportsApi.getVehiclesWithViolationsByLocation
 };
+
 
 export const initDashboardHandlers = () => {
     const app = document.getElementById('app');
@@ -47,9 +49,27 @@ const renderReportTable = (id, data) => {
         return;
     }
 
+    const dateFields = ['date_of_birth', 'issue_date', 'expiry_date', 'registration_date', 'expiration_date', 'date'];
+
     const columns = Object.keys(data[0]);
-    let html = `<table><thead><tr>${columns.map(c => `<th>${c.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}</th>`).join('')}</tr></thead><tbody>`;
-    html += data.map(row => `<tr>${columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('')}</tr>`).join('');
+    let html = `<p><strong>${data.length}</strong> entries found.</p>`;
+
+    html = `<table><thead><tr>${columns.map(c => `<th>${c.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}</th>`).join('')}</tr></thead><tbody>`;
+    
+    html += data.map(row => {
+        const cells = columns.map(c => {
+            let value = row[c] ?? '-';
+            
+            // parse date values
+            if (dateFields.includes(c) && value !== '-') {
+                value = parseDate(value);
+            }
+            
+            return `<td>${value}</td>`;
+        }).join('');
+        return `<tr>${cells}</tr>`;
+    }).join('');
+    
     html += `</tbody></table>`;
     
     container.innerHTML = html;

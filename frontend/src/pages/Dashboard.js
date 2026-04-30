@@ -85,7 +85,7 @@ export const Dashboard = () => {
             <div id="content-3" class="tab-content">
                 <form id="form-3">
                     <h3>View all vehicles with expired registrations as of a given date</h3>
-                    <div class="form-group"><label>As Of Date:</label><input type="date" name="date"></div>
+                    <div class="form-group"><label>As Of Date:</label><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></div>
                     <button type="submit">Get</button>
                 </form>
                 <div id="table-3"></div>
@@ -103,8 +103,8 @@ export const Dashboard = () => {
                 <form id="form-5">
                     <h3>View all traffic violations committed by a given driver within a specified date range</h3>
                     <div class="form-group"><label>License Number:</label><input type="text" name="license_number"></div>
-                    <div class="form-group"><label>Start Date:</label><input type="date" name="startDate"></div>
-                    <div class="form-group"><label>End Date:</label><input type="date" name="endDate"></div>
+                    <div class="form-group"><label>Start Date:</label><input type="date" name="startDate" value="${new Date(0).toISOString().split('T')[0]}"></div>
+                    <div class="form-group"><label>End Date:</label><input type="date" name="endDate" value="${new Date().toISOString().split('T')[0]}"></div>
                     <button type="submit">Get</button>
                 </form>
                 <div id="table-5"></div>
@@ -113,7 +113,7 @@ export const Dashboard = () => {
             <div id="content-6" class="tab-content">
                 <form id="form-6">
                     <h3>View the total number of violations per violation type for a given year</h3>
-                    <div class="form-group"><label>Year:</label><input type="number" name="year"></div>
+                    <div class="form-group"><label>Year:</label><input type="number" name="year" value="${new Date().getFullYear()}"></div>
                     <button type="submit">Get</button>
                 </form>
                 <div id="table-6"></div>
@@ -122,7 +122,7 @@ export const Dashboard = () => {
             <div id="content-7" class="tab-content">
                 <form id="form-7">
                     <h3>View all vehicles involved in violations within a given city or region</h3>
-                    <div class="form-group"><label>Location:</label><input type="text" name="location"></div>
+                    <div class="form-group"><label>Location:</label><input type="text" name="location" placeholder="Manila"></div>
                     <button type="submit">Get</button>
                 </form>
                 <div id="table-7"></div>

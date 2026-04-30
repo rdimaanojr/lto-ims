@@ -46,9 +46,9 @@ const handleAdminSubmit = async (form) => {
 
     const res = await apiFunction(data);
     if (res.status === 201) {
-        alert("Successfully added entry!");
+        // alert("Successfully added entry!");
         form.reset();
-        renderDataTables();
+        // renderDataTables();
     } else {
         alert(res.data.error || 'Error adding entry');
     }
@@ -65,13 +65,19 @@ export const initAdminHandlers = () => {
 
             if (!target) return;
 
-            document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        
+            const parentContainer = e.target.parentElement;
+            const viewContainer = target.parentElement;
+
+            parentContainer.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+            Array.from(viewContainer.children).forEach(el => {
+                if (el.classList.contains('tab-content')) el.classList.remove('active');
+            });
 
             e.target.classList.add('active');
             target.classList.add('active');
 
-            if (targetId === 'view-records') renderDataTables();
+            if (targetId === 'view-records' || targetId.includes('-view')) renderDataTables();
             if (targetId === 'view-accounts') renderAccountTables();
         }
     });
@@ -218,7 +224,10 @@ export const renderDataTables = async () => {
         const primaryKey = primaryKeyMap[containerId] || columns[0];
         const columnHeaders = [...columns, 'Action'];
 
-        let content = `<table><thead><tr>${columnHeaders.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+        // Added the simple text for entry count here
+        let content = `<p><strong>${data.length}</strong> entries found.</p>`;
+        
+        content += `<table><thead><tr>${columnHeaders.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
         content += data.map(row => {
             const cells = columns.map(c => `<td>${row[c] ?? '-'}</td>`).join('');
             const recordId = row[primaryKey];
@@ -229,7 +238,6 @@ export const renderDataTables = async () => {
     };
 
     await fetchAndRender('table-drivers', adminApi.getAllDrivers);
-    // await fetchAndRender('table-models', adminApi.getAllModels);
     await fetchAndRender('table-vehicles', adminApi.getAllVehicles);
     await fetchAndRender('table-registrations', adminApi.getAllRegistrations);
     await fetchAndRender('table-violations', adminApi.getAllViolations);

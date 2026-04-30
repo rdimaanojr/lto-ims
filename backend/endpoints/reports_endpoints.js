@@ -4,7 +4,7 @@ export const getDriversFiltered = async (req, res, session) => {
     // parse params from the URL
     const url = new URL(req.url, `http://${req.headers.host}`);
     const licenseType = url.searchParams.get('license_type');
-    const status = url.searchParams.get('status');
+    const status = url.searchParams.get('license_status');
     const sex = url.searchParams.get('sex');
     const minAge = url.searchParams.get('minAge');
     const maxAge = url.searchParams.get('maxAge');

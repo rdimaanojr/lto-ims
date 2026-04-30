@@ -6,40 +6,18 @@ import { userApi } from "../api/user_api.js";
 // Dummy Data Lists
 const SERIES = ['A', 'B', 'C', 'D'];
 const FIRST_NAMES = [
-    'John',
-    'Jane',
-    'Michael',
-    'Sarah',
-    'David',
-    'Emily',
-    'Robert',
-    'Lisa',
-    'James',
-    'Anna'
+    'John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'Robert', 'Lisa', 'James',
+    'Anna', "Juan", "Maria", "Jose", "Luis", "Carmen", "Pedro", "Rosa", "Carlos", "Isabel", "Miguel",
+    'Sofia', 'Diego', 'Lucia', 'Jorge', 'Marta', 'Alberto', 'Elena', 'Andres', 'Laura', 'Fernando',
+    'Brandon', 'Jessica', 'Kevin', 'Amanda', 'Steven', 'Melissa', 'Brian', 'Nicole', 'Eric', 'Heather',
 ]
 const LAST_NAMES = [
-    'Smith',
-    'Johnson',
-    'Williams',
-    'Brown',
-    'Jones',
-    'Garcia',
-    'Miller',
-    'Davis',
-    'Rodriguez',
-    'Martinez'
-]
+    'Garcia', 'Miller', 'Rodriguez', 'Martinez', 'Cruz', 'dela Cruz', 'Reyes', 'Santos', 'Bautista', 'Gonzales', 'Lopez',
+    'Wilson', 'Torres', 'Aquino', 'Ramos', 'Ramirez', 'Garcia', 'Fernandez', 'Mendoza', 'Navarro', 'Manalo', 'Gomez',
+    'Castillo', 'Rivera', 'Sanchez', 'De Leon', 'Tolentino', ]
 const MIDDLE_NAMES = [
-    'Alexander',
-    'Marie',
-    'William',
-    'Rose',
-    'Joseph',
-    'Grace',
-    'Thomas',
-    'Elizabeth',
-    'Daniel',
-    'Catherine'
+    'Alexander', 'Marie', 'William', 'Rose', 'Joseph', 'Grace', 'Thomas', 'Elizabeth', 'Daniel', 'Catherine', 'John',
+    ...LAST_NAMES
 ]
 const LICENSE_TYPES = [
     'student',
@@ -167,7 +145,7 @@ const generateLicenseNumber = (issueDate) => {
 const generateExistingLicenseNumber = async () => {
     try {
         const response = await userApi.getLicenseNumbers();
-        const list = response.data?.license_numbers || [];      
+        const list = response.data?.license_numbers || [];
         if (list.length === 0) return generate.generateLicenseNumber();
         return list[Math.floor(Math.random() * list.length)];
     } catch (err) {
@@ -178,9 +156,6 @@ const generateExistingLicenseNumber = async () => {
 const validateLicenseNumber = (val) => {
     const regex = /^[A-Z]\d{2}-\d{2}-\d{6}$/;
     return regex.test(val);
-};
-const parseLicenseNumber = (val) => {
-    return val;
 };
 
 // full_name
@@ -196,15 +171,6 @@ const validateFullName = (val) => {
     // Check format: LAST, FIRST or LAST, FIRST MIDDLE
     const regex = /^[A-Za-z\s]+,\s[A-Za-z\s]+(\s[A-Za-z\s]+)?$/;
     return regex.test(val);
-};
-const parseFullName = (val) => {
-    const parts = val.split(',');
-    if (parts.length !== 2) return null;
-    const last = parts[0].trim();
-    const firstMiddle = parts[1].trim().split(' ');
-    const first = firstMiddle[0];
-    const middle = firstMiddle.slice(1).join(' ') || null;
-    return { last, first, middle };
 };
 
 // date_of_birth
@@ -224,10 +190,6 @@ const generateDateOfBirth = () => {
 const validateDateOfBirth = (val) => {
     return !isNaN(Date.parse(val));
 };
-const parseDateOfBirth = (val) => {
-    const date = new Date(val);
-    return date.toISOString().split('T')[0];
-};
 
 // age
 // just make sure it's correct with date_of_birth and valid age
@@ -244,9 +206,6 @@ const validateAge = (val, dob) => {
     }
     return true;
 };
-const parseAge = (val) => {
-    return parseInt(val, 10);
-};
 
 const generateSex = () => {
     return Math.random() > 0.5 ? 'M' : 'F';
@@ -254,9 +213,7 @@ const generateSex = () => {
 const validateSex = (val) => {
     return val === 'M' || val === 'F';
 };
-const parseSex = (val) => {
-    return val === 'M' ? "Male" : "Female";
-};
+
 
 // address : varchar 100
 // generated with PSGC city data when available
@@ -275,9 +232,6 @@ const generateAddress = async () => {
 const validateAddress = (val) => {
     return typeof val === 'string' && val.length <= 100 && val.trim().length > 0;
 };
-const parseAddress = (val) => {
-    return val.trim();
-};
 
 // license_type
 // enum: student, non-professional, professional
@@ -287,9 +241,7 @@ const generateLicenseType = () => {
 const validateLicenseType = (val) => {
     return LICENSE_TYPES.includes(val);
 };
-const parseLicenseType = (val) => {
-    return val;
-};
+
 
 // 1 to 5 years
 // license_status
@@ -299,9 +251,6 @@ const generateLicenseStatus = () => {
 };
 const validateLicenseStatus = (val) => {
     return LICENSE_STATUSES.includes(val);
-};
-const parseLicenseStatus = (val) => {
-    return val;
 };
 
 // issue_date
@@ -316,10 +265,7 @@ const generateIssueDate = () => {
 const validateIssueDate = (val) => {
     return !isNaN(Date.parse(val));
 };
-const parseIssueDate = (val) => {
-    const date = new Date(val);
-    return date.toISOString().split('T')[0];
-};
+
 
 // expiry_date
 // must be after issue_date
@@ -335,10 +281,6 @@ const validateExpiryDate = (val, issueDate) => {
     }
     return !isNaN(Date.parse(val));
 };
-const parseExpiryDate = (val) => {
-    const date = new Date(val);
-    return date.toISOString().split('T')[0];
-};
 
 // vehicle_model
 const generateVehicleModel = () => {
@@ -347,9 +289,7 @@ const generateVehicleModel = () => {
 const validateVehicleModel = (val) => {
     return typeof val === 'string' && val.length > 0;
 };
-const parseVehicleModel = (val) => {
-    return val;
-};
+
 
 // vehicle make
 const generateVehicleMake = () => {
@@ -357,9 +297,6 @@ const generateVehicleMake = () => {
 };
 const validateVehicleMake = (val) => {
     return typeof val === 'string' && val.length > 0;
-};
-const parseVehicleMake = (val) => {
-    return val;
 };
 
 // vehicle_type
@@ -369,9 +306,6 @@ const generateVehicleType = () => {
 };
 const validateVehicleType = (val) => {
     return VEHICLE_TYPES.includes(val);
-};
-const parseVehicleType = (val) => {
-    return val;
 };
 
 // plate_number : three formats
@@ -418,16 +352,13 @@ const generateExistingPlateNumber = async () => {
     } catch (err) {
         return generate.generatePlateNumber();
     }
-};   
+};
 
 const validatePlateNumber = (val) => {
     const regex1 = /^[A-Z]{3} \d{4}$/;
     const regex2 = /^\d{3}[A-Z]{3}$/;
     const regex3 = /^[A-Z]\d{3}[A-Z]{2}$/;
     return regex1.test(val) || regex2.test(val) || regex3.test(val);
-};
-const parsePlateNumber = (val) => {
-    return val;
 };
 
 // engine_number : varchar 17 (unique)
@@ -442,9 +373,6 @@ const generateEngineNumber = () => {
 const validateEngineNumber = (val) => {
     return typeof val === 'string' && val.length === 17 && /^[A-Z0-9]+$/.test(val);
 };
-const parseEngineNumber = (val) => {
-    return val;
-};
 
 // chassis_number: varchar 17 (unique)
 const generateChassisNumber = () => {// Assuming it exists
@@ -458,9 +386,6 @@ const generateChassisNumber = () => {// Assuming it exists
 const validateChassisNumber = (val) => {
     return typeof val === 'string' && val.length === 17 && /^[A-Z0-9]+$/.test(val);
 };
-const parseChassisNumber = (val) => {
-    return val;
-};
 
 // model : must match to what the models
 // model itself ideintifies the make and vehicle type
@@ -470,9 +395,6 @@ const generateModel = () => {
 const validateModel = (val) => {
     return typeof val === 'string' && val.length > 0;
 };
-const parseModel = (val) => {
-    return val;
-};
 
 // year : valid year
 const generateYear = () => {
@@ -480,9 +402,6 @@ const generateYear = () => {
 };
 const validateYear = (val) => {
     return Number.isInteger(val) && val >= 1900 && val <= 2030;
-};
-const parseYear = (val) => {
-    return parseInt(val, 10);
 };
 
 // color :
@@ -493,9 +412,6 @@ const generateColor = () => {
 const validateColor = (val) => {
     return typeof val === 'string' && val.length > 0;
 };
-const parseColor = (val) => {
-    return val;
-};
 
 // registration_number : int auto increment if not specified
 const generateRegistrationNumber = () => {
@@ -503,9 +419,6 @@ const generateRegistrationNumber = () => {
 };
 const validateRegistrationNumber = (val) => {
     return Number.isInteger(val);
-};
-const parseRegistrationNumber = (val) => {
-    return val;
 };
 
 // registration_date : just valid date
@@ -519,10 +432,6 @@ const generateRegistrationDate = () => {
 const validateRegistrationDate = (val) => {
     return !isNaN(Date.parse(val));
 };
-const parseRegistrationDate = (val) => {
-    const date = new Date(val);
-    return date.toISOString().split('T')[0];
-};
 
 // registration_staus
 // enum : active, expired, suspended
@@ -531,9 +440,6 @@ const generateRegistrationStatus = () => {
 };
 const validateRegistrationStatus = (val) => {
     return REGISTRATION_STATUSES.includes(val);
-};
-const parseRegistrationStatus = (val) => {
-    return val;
 };
 
 // expiration_date : just valid date
@@ -546,10 +452,6 @@ const generateExpirationDate = () => {
 const validateExpirationDate = (val) => {
     return !isNaN(Date.parse(val));
 };
-const parseExpirationDate = (val) => {
-    const date = new Date(val);
-    return date.toISOString().split('T')[0];
-};
 
 // plate_number must exist already 
 const generateExistingPlate = () => {
@@ -558,9 +460,6 @@ const generateExistingPlate = () => {
 const validateExistingPlate = (val, db) => {
     return validatePlateNumber(val);
 };
-const parseExistingPlate = (val) => {
-    return val;
-};
 
 // violation_id : int
 const generateViolationId = () => {
@@ -568,9 +467,6 @@ const generateViolationId = () => {
 };
 const validateViolationId = (val) => {
     return Number.isInteger(val);
-};
-const parseViolationId = (val) => {
-    return val;
 };
 
 // violation_type : varchar
@@ -581,9 +477,6 @@ const generateViolationType = () => {
 const validateViolationType = (val) => {
     return typeof val === 'string' && val.length > 0;
 };
-const parseViolationType = (val) => {
-    return val;
-};
 
 // location : varchar
 // using PSGC api for city and/or region
@@ -593,9 +486,6 @@ const generateLocation = async () => {
 
 const validateLocation = (val) => {
     return typeof val === 'string' && val.length > 0;
-};
-const parseLocation = (val) => {
-    return val;
 };
 
 // apprehending_officer : varchar
@@ -609,13 +499,6 @@ const validateApprehendingOfficer = (val) => {
     const regex = /^[A-Za-z\s]+,\s[A-Za-z\s]+$/;
     return regex.test(val);
 };
-const parseApprehendingOfficer = (val) => {
-    const parts = val.split(',');
-    if (parts.length !== 2) return null;
-    const last = parts[0].trim();
-    const first = parts[1].trim();
-    return { last, first };
-};
 
 // violation_status : enum
 // unpaid, paid, contested
@@ -625,9 +508,6 @@ const generateViolationStatus = () => {
 const validateViolationStatus = (val) => {
     return VIOLATION_STATUSES.includes(val);
 };
-const parseViolationStatus = (val) => {
-    return val;
-};
 
 // fine amount : decimal two digits
 const generateFineAmount = () => {
@@ -636,9 +516,6 @@ const generateFineAmount = () => {
 const validateFineAmount = (val) => {
     return typeof val === 'number' && val >= 0;
 };
-const parseFineAmount = (val) => {
-    return 'Php ' + parseFloat(val).toFixed(2).toString();
-};
 
 // license_number and plate_number must exist oor something
 const generateVerification = () => {
@@ -646,9 +523,6 @@ const generateVerification = () => {
 };
 const validateVerification = (lic, plate, db) => {
     return validateLicenseNumber(lic) && validatePlateNumber(plate);
-};
-const parseVerification = (val) => {
-    return val;
 };
 
 export const generate = {
@@ -718,38 +592,4 @@ export const validate = {
     validateViolationStatus,
     validateFineAmount,
     validateVerification
-};
-
-export const parse = {
-    parseLicenseNumber,
-    parseFullName,
-    parseDateOfBirth,
-    parseAge,
-    parseSex,
-    parseAddress,
-    parseLicenseType,
-    parseLicenseStatus,
-    parseIssueDate,
-    parseExpiryDate,
-    parseVehicleModel,
-    parseVehicleMake,
-    parseVehicleType,
-    parsePlateNumber,
-    parseEngineNumber,
-    parseChassisNumber,
-    parseModel,
-    parseYear,
-    parseColor,
-    parseRegistrationNumber,
-    parseRegistrationDate,
-    parseRegistrationStatus,
-    parseExpirationDate,
-    parseExistingPlate,
-    parseViolationId,
-    parseViolationType,
-    parseLocation,
-    parseApprehendingOfficer,
-    parseViolationStatus,
-    parseFineAmount,
-    parseVerification
 };

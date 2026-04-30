@@ -21,3 +21,13 @@ export const buildQuery = (params) => {
     });
     return searchParams.toString();
 };
+
+export const parseDate = (val) => {
+    if (!val || isNaN(Date.parse(val))) return val;
+    const date = new Date(val);
+    return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit'
+    }).format(date).replace(/(\w+) (\d+), (\d+)/, '$3, $1 $2'); 
+};
