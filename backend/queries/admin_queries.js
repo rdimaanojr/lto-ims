@@ -8,16 +8,16 @@ export const addDriver = (data) => {
     );
 };
 
-export const addVehicleModel = (data) => {
-    return db.execute(`INSERT INTO vehicle_model (model, make, vehicle_type) VALUES (?, ?, ?)`, 
-        [data.model, data.make, data.vehicle_type]);
-};
+// export const addVehicleModel = (data) => {
+//     return db.execute(`INSERT INTO vehicle_model (model, make, vehicle_type) VALUES (?, ?, ?)`, 
+//         [data.model, data.make, data.vehicle_type]);
+// };
 
 export const addVehicle = (data) => {
     return db.execute(
-        `INSERT INTO vehicle (plate_number, engine_number, chassis_number, model, year, color, license_number) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [data.plate_number, data.engine_number, data.chassis_number, data.model, data.year, data.color, data.license_number]
+        `INSERT INTO vehicle (plate_number, engine_number, chassis_number, model, make, year, vehicle_type, color, license_number) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [data.plate_number, data.engine_number, data.chassis_number, data.model, data.make, data.year, data.vehicle_type, data.color, data.license_number]
     );
 };
 

@@ -3,7 +3,7 @@ import { generate } from '../utils/user_utils.js';
 
 const apiMap = {
     'form-driver': adminApi.addDriver,
-    'form-model': adminApi.addModel,
+    // 'form-model': adminApi.addModel,
     'form-vehicle': adminApi.addVehicle,
     'form-registration': adminApi.addRegistration,
     'form-violation': adminApi.addViolation
@@ -145,7 +145,7 @@ export const initAdminHandlers = () => {
             } else if (formId === 'model') {
                 fields = ['model', 'make', 'vehicle_type'];
             } else if (formId === 'vehicle') {
-                fields = ['plate_number', 'engine_number', 'chassis_number', 'model', 'year', 'color', 'license_number'];
+                fields = ['plate_number', 'engine_number', 'chassis_number', 'model', 'make', 'year', 'vehicle_type', 'color', 'license_number'];
             } else if (formId === 'registration') {
                 fields = ['registration_date', 'expiration_date', 'plate_number'];
             } else if (formId === 'violation') {
@@ -198,7 +198,7 @@ export const renderDataTables = async () => {
     };
 
     await fetchAndRender('table-drivers', adminApi.getAllDrivers);
-    await fetchAndRender('table-models', adminApi.getAllModels);
+    // await fetchAndRender('table-models', adminApi.getAllModels);
     await fetchAndRender('table-vehicles', adminApi.getAllVehicles);
     await fetchAndRender('table-registrations', adminApi.getAllRegistrations);
     await fetchAndRender('table-violations', adminApi.getAllViolations);

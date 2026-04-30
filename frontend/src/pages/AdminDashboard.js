@@ -62,21 +62,14 @@ export const AdminDashboard = () => {
                         <button type="submit">Add Driver</button>
                     </form>
                     <hr>
-                    <form id="form-model">
-                        <h3>Add Vehicle Model</h3>
-                        <div class="form-group"><label>Model Name:</label><input type="text" name="model" required><button type="button" class="random-btn" data-field="model">Random</button></div>
-                        <div class="form-group"><label>Make:</label><input type="text" name="make" required><button type="button" class="random-btn" data-field="make">Random</button></div>
-                        <div class="form-group"><label>Vehicle Type:</label><input type="text" name="vehicle_type" required><button type="button" class="random-btn" data-field="vehicle_type">Random</button></div>
-                        <button type="button" class="random-all-btn" data-form="model">Random All</button>
-                        <button type="submit">Add Model</button>
-                    </form>
-                    <hr>
                     <form id="form-vehicle">
                         <h3>Add Vehicle</h3>
                         <div class="form-group"><label>Plate Number:</label><input type="text" name="plate_number" required><button type="button" class="random-btn" data-field="plate_number">Random</button></div>
                         <div class="form-group"><label>Engine Number:</label><input type="text" name="engine_number" required><button type="button" class="random-btn" data-field="engine_number">Random</button></div>
                         <div class="form-group"><label>Chassis Number:</label><input type="text" name="chassis_number" required><button type="button" class="random-btn" data-field="chassis_number">Random</button></div>
                         <div class="form-group"><label>Model:</label><input type="text" name="model" required><button type="button" class="random-btn" data-field="model">Random</button></div>
+                        <div class="form-group"><label>Make:</label><input type="text" name="make" required><button type="button" class="random-btn" data-field="make">Random</button></div>
+                        <div class="form-group"><label>Vehicle Type:</label><input type="text" name="vehicle_type" required><button type="button" class="random-btn" data-field="vehicle_type">Random</button></div>
                         <div class="form-group"><label>Year:</label><input type="number" name="year"><button type="button" class="random-btn" data-field="year">Random</button></div>
                         <div class="form-group"><label>Color:</label><input type="text" name="color"><button type="button" class="random-btn" data-field="color">Random</button></div>
                         <div class="form-group"><label>Owner License #:</label><input type="text" name="license_number" required><button type="button" class="random-btn" data-field="license_number">Random</button></div>
@@ -111,7 +104,6 @@ export const AdminDashboard = () => {
             <div id="view-records" class="tab-content">
                 <h2>Database Records</h2>
                 <div class="section-block"><h3>Drivers</h3><div id="table-drivers"></div></div><hr>
-                <div class="section-block"><h3>Vehicle Models</h3><div id="table-models"></div></div><hr>
                 <div class="section-block"><h3>Vehicles</h3><div id="table-vehicles"></div></div><hr>
                 <div class="section-block"><h3>Registrations</h3><div id="table-registrations"></div></div><hr>
                 <div class="section-block"><h3>Violations</h3><div id="table-violations"></div></div>

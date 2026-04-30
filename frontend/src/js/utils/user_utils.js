@@ -135,6 +135,11 @@ const VIOLATION_TYPES = [
     'Disregarding Traffic Signs',
     'Overloading'
 ];
+const ALL_LOCATIONS = [...cities, ...municipalities].map(loc => {
+    const provinceName = (loc.provinceCode) ? provinces.find(p => p.code === loc.provinceCode)?.name : null;
+    const regionName = regions.find(r => r.code === loc.regionCode)?.name;
+    return `${loc.name}, ${provinceName ? provinceName : regionName}`;
+});
 
 import { barangays } from "./psgc/barangays.js";
 import { cities } from "./psgc/cities.js";
@@ -546,9 +551,9 @@ const parseViolationType = (val) => {
 // location : varchar
 // using PSGC api for city and/or region
 const generateLocation = async () => {
-    const locations = await getAllLocations();
-    return locations[Math.floor(Math.random() * locations.length)];
+    return ALL_LOCATIONS[Math.floor(Math.random() * ALL_LOCATIONS.length)];
 };
+
 const validateLocation = (val) => {
     return typeof val === 'string' && val.length > 0;
 };

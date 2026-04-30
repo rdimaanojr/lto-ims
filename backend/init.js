@@ -27,22 +27,22 @@ const initDriverTable = async () => {
     }
 };
 
-const initVehicleModelTable = async () => {
-    const sql = 
-    `CREATE TABLE IF NOT EXISTS vehicle_model (
-        model VARCHAR(30) PRIMARY KEY,
-        make VARCHAR(30) NOT NULL,
-        vehicle_type VARCHAR(25) NOT NULL
-    )`;
+// const initVehicleModelTable = async () => {
+//     const sql = 
+//     `CREATE TABLE IF NOT EXISTS vehicle_model (
+//         model VARCHAR(30) PRIMARY KEY,
+//         make VARCHAR(30) NOT NULL,
+//         vehicle_type VARCHAR(25) NOT NULL
+//     )`;
 
-    try {
-        const [results] = await db.query(sql);
-        console.log(results.warningStatus === 0 ? "Table `vehicle_model` created." : "Table `vehicle_model` already exists.")
-    } catch (err) {
-        console.error("Error initializing `vehicle_model` table:", err);
-        throw err;
-    }
-};
+//     try {
+//         const [results] = await db.query(sql);
+//         console.log(results.warningStatus === 0 ? "Table `vehicle_model` created." : "Table `vehicle_model` already exists.")
+//     } catch (err) {
+//         console.error("Error initializing `vehicle_model` table:", err);
+//         throw err;
+//     }
+// };
 
 const initVehicleTable = async () => {
     const sql = 
@@ -51,14 +51,16 @@ const initVehicleTable = async () => {
         engine_number VARCHAR(17) NOT NULL,
         chassis_number VARCHAR(17) NOT NULL,
         model VARCHAR(30) NOT NULL,
+        make VARCHAR(30) NOT NULL,
         year INT(4) NOT NULL,
+        vehicle_type VARCHAR(25) NOT NULL,
         color VARCHAR(10),
         license_number VARCHAR(20) NOT NULL,
     
         -- Constraints
         CONSTRAINT vehicle_engine_number_uq UNIQUE (engine_number),
         CONSTRAINT vehicle_chassis_number_uq UNIQUE (chassis_number),
-        CONSTRAINT vehicle_model_fk FOREIGN KEY (model) REFERENCES vehicle_model(model),
+        -- CONSTRAINT vehicle_model_fk FOREIGN KEY (model) REFERENCES vehicle_model(model),
         CONSTRAINT vehicle_license_number_fk FOREIGN KEY(license_number) REFERENCES driver(license_number)
     )`;
     
@@ -144,7 +146,7 @@ export const initializeDatabaseTables = async () => {
     try {
         console.log("Initializing database tables.");
         await initDriverTable();
-        await initVehicleModelTable();
+        // await initVehicleModelTable();
         await initVehicleTable();
         await initRegistrationTable();
         await initViolationTable();
