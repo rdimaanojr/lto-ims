@@ -10,6 +10,7 @@ export const Login = () => {
                 align-items: center; 
                 min-height: 100vh; 
                 font-family: sans-serif;
+                padding: 20px 0;
             }
             .login-wrapper {
                 display: flex;
@@ -17,6 +18,8 @@ export const Login = () => {
                 max-width: 450px;
                 text-align: center;
                 align-items: center;
+                justify-content: center;
+                flex-grow: 1;
             }
             .login-container { 
                 padding: 40px; 
@@ -32,11 +35,17 @@ export const Login = () => {
             input { width: 100%; padding: 8px; box-sizing: border-box; }
             button { width: 100%; padding: 8px; cursor: pointer; margin-top: 10px; }
             .toggle-link { margin-top: 15px; font-size: 0.85em; color: #111; cursor: pointer; text-decoration: underline; }
+
+            #login-footer {
+                font-size: 0.8em; color: #555;
+                flex-shrink: 0;
+            }
+
         </style>
 
         <div class="login-full-page">
             <div class="login-wrapper">
-                <h1>LTO Management System</h1>
+                <h1>LTO Information Management System</h1>
 
                 <div class="login-container">
                     <div id="view-login">
@@ -60,6 +69,9 @@ export const Login = () => {
                         <div class="toggle-link" onclick="toggleAuth()">Back to Login</div>
                     </div>
                 </div>
+            </div>
+            <div id="login-footer">
+                © 2026 Six Seven Technologies. All rights reserved.
             </div>
         </div>
     `;

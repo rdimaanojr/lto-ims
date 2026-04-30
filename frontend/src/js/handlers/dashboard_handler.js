@@ -52,9 +52,10 @@ const renderReportTable = (id, data) => {
     const dateFields = ['date_of_birth', 'issue_date', 'expiry_date', 'registration_date', 'expiration_date', 'date'];
 
     const columns = Object.keys(data[0]);
+
     let html = `<p><strong>${data.length}</strong> entries found.</p>`;
 
-    html = `<table><thead><tr>${columns.map(c => `<th>${c.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}</th>`).join('')}</tr></thead><tbody>`;
+    html += `<table><thead><tr>${columns.map(c => `<th>${c.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}</th>`).join('')}</tr></thead><tbody>`;
     
     html += data.map(row => {
         const cells = columns.map(c => {
