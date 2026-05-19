@@ -27,7 +27,7 @@ export const Login = () => {
                 max-width: 350px; 
                 border-radius: 8px; 
                 text-align: center;
-                width: 90%;
+                width: 90%;z
             }
             h1 { width: 100%; font-size: 3em; margin-bottom: 30px; }
             h2 { font-size: 1em; margin-bottom: 15px; }

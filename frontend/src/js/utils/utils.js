@@ -23,11 +23,13 @@ export const buildQuery = (params) => {
 };
 
 export const parseDate = (val) => {
-    if (!val || isNaN(Date.parse(val))) return val;
+    if (!val) return val;
+    const iso = String(val).slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
     const date = new Date(val);
-    return new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit'
-    }).format(date).replace(/(\w+) (\d+), (\d+)/, '$3, $1 $2'); 
+    if (isNaN(date.getTime())) return val;
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
 };

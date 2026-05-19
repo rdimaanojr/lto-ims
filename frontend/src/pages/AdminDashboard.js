@@ -1,50 +1,5 @@
 export const AdminDashboard = () => {
     return `
-        <style>
-            .admin-dashboard { padding: 20px; font-family: sans-serif; }
-            .tabs { margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-            .tab-link { margin-right: 20px; cursor: pointer; font-weight: bold; color: #555; white-space: nowrap; }
-            .tab-link:hover { color: #000; }
-            .tab-link.active { color: #000; text-decoration: underline; }
-            
-            .tab-content { display: none; }
-            .tab-content.active { display: block; }
-            
-            .form-group { margin-bottom: 10px; }
-            .form-group label { display: inline-block; width: 180px; font-weight: bold; }
-            .form-group input, .form-group select { width: 250px; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f4f4f4; }
-            .section-block { margin: 0 0; }
-
-            .sub-tabs { 
-                border-bottom: 1px dashed #ddd;
-                margin-bottom: 0;
-            }
-
-            .sub-tabs .tab-link { 
-                font-size: 0.9em; 
-                color: #777;
-            }
-
-            [id^="table-"] {
-                overflow-y: auto;
-                margin-top: 10px;
-            }
-
-            .accounts-container { 
-                display: flex; 
-                flex-wrap: wrap; 
-                gap: 20px; 
-            }
-            .accounts-section { 
-                flex: 1 1 45%;
-                min-width: 300px;
-            }
-
-        </style>
-        
         <div class="admin-dashboard">
             <h1>Database Admin Panel</h1>
             
