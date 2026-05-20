@@ -76,9 +76,37 @@ const routes = {
         guard: authorizeAdmin
     },
 
-    // user endpoints
+    // user endpoints - lookup helpers
     'GET /api/user/license-numbers': { handler: userEndpoints.getLicenseNumbers, guard: authorize },
     'GET /api/user/plate-numbers': { handler: userEndpoints.getPlateNumbers, guard: authorize },
+
+    // user CRUD endpoints - Drivers
+    'GET /api/user/drivers': { handler: userEndpoints.getAllDrivers, guard: authorize },
+    'GET /api/user/driver': { handler: userEndpoints.getDriver, guard: authorize },
+    'POST /api/user/driver': { handler: userEndpoints.addDriver, guard: authorize },
+    'PUT /api/user/driver': { handler: userEndpoints.updateDriver, guard: authorize },
+    'DELETE /api/user/driver': { handler: userEndpoints.deleteDriver, guard: authorize },
+
+    // user CRUD endpoints - Vehicles
+    'GET /api/user/vehicles': { handler: userEndpoints.getAllVehicles, guard: authorize },
+    'GET /api/user/vehicle': { handler: userEndpoints.getVehicle, guard: authorize },
+    'POST /api/user/vehicle': { handler: userEndpoints.addVehicle, guard: authorize },
+    'PUT /api/user/vehicle': { handler: userEndpoints.updateVehicle, guard: authorize },
+    'DELETE /api/user/vehicle': { handler: userEndpoints.deleteVehicle, guard: authorize },
+
+    // user CRUD endpoints - Registrations
+    'GET /api/user/registrations': { handler: userEndpoints.getAllRegistrations, guard: authorize },
+    'GET /api/user/registration': { handler: userEndpoints.getRegistration, guard: authorize },
+    'POST /api/user/registration': { handler: userEndpoints.addRegistration, guard: authorize },
+    'PUT /api/user/registration': { handler: userEndpoints.updateRegistration, guard: authorize },
+    'DELETE /api/user/registration': { handler: userEndpoints.deleteRegistration, guard: authorize },
+
+    // user CRUD endpoints - Violations
+    'GET /api/user/violations': { handler: userEndpoints.getAllViolations, guard: authorize },
+    'GET /api/user/violation': { handler: userEndpoints.getViolation, guard: authorize },
+    'POST /api/user/violation': { handler: userEndpoints.addViolation, guard: authorize },
+    'PUT /api/user/violation': { handler: userEndpoints.updateViolation, guard: authorize },
+    'DELETE /api/user/violation': { handler: userEndpoints.deleteViolation, guard: authorize },
 
     // admin endpoints  
     'POST /api/admin/add-driver': { handler: adminEndpoints.postAddDriver, guard: authorizeAdmin },
@@ -110,12 +138,14 @@ const PROJECT_ROOT = path.join(__dirname, '..');
 const APP_PATHS = [
     '/',
     '/dashboard',
+    '/crud',
     '/admin',
 ]
 
 const USER_SRC_FILES = [
     // pages
     '/src/pages/Dashboard.js',
+    '/src/pages/CRUD.js',
 
     //components
     // '/src/components/Navbar.js'

@@ -43,5 +43,21 @@ export const navigateTo = async (path) => {
         return;
     }
 
+    if (targetPath === '/crud') {
+        if (!isLoggedIn) {
+            targetPath = '/';
+            if (window.location.pathname !== targetPath) {
+                window.history.pushState({}, "", targetPath);
+            }
+            render.renderPage(Login(), false);
+            return;
+        }
+        const { CRUD } = await import('../pages/CRUD.js');
+        const { initCRUDHandlers } = await import('./handlers/crud_handler.js');
+        render.renderPage(CRUD(), true);
+        initCRUDHandlers();
+        return;
+    }
+
     render.renderPage(Login(), false);
 };
